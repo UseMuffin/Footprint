@@ -23,22 +23,20 @@ trait FootprintAwareTrait
      */
     protected $_currentUserInstance;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadModel($modelClass = null, $type = 'Table')
+    public function implementedEvents()
     {
-        if (empty($modelClass) || is_string($modelClass)) {
-            $modelClass = parent::loadModel($modelClass, $type);
-        }
+        return parent::implementedEvents() + [
+            'Model.initialize' => [$this, 'footprint'];
+        ];
+    }
 
+    public function footprint(Event $event)
+    {
         try {
             $listener = new FootprintListener($this->_getCurrentUser());
-            $this->_attachRecursive($listener, $modelClass);
+            $this->_attachRecursive($listener, $event->subject())
         } catch (RuntimeException $e) {
         }
-
-        return $modelClass;
     }
 
     /**

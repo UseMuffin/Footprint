@@ -40,13 +40,9 @@ class AppController extends Controller
 }
 ```
 
-and call `$this->_setCurrentUser()` after setting up the `AuthComponent` but before any call to `loadModel()`.
-
 This will override the `Cake\Datasource\ModelAwareTrait` to attach the `Muffin\Footprint\Event\FootprintListener`
 which will inject the currently logged in user's instance on `Model.beforeSave` and `Model.afterSave` in the `_footprint`
 key of `$options`. 
-
-__The trait can also be used in view cells.__
 
 ### Behavior
 
@@ -77,42 +73,6 @@ $this->addBehavior('Footprint', [
 This will insert the currently logged in user's primary key in `user_id` and `modified_by` fields when creating 
 a record, on the `modified_by` field again when updating the record and it will use the associated user record's
 company `id` in the `company_id` field when creating a record.
-
-## Good to know
-
-The `Muffin\Footprint\Auth\FootprintAwareTrait::loadModel()` method is stackable. So, if you have a custom trait
-that already implements a `loadModel()` method on top of the `Cake\Datasource\ModelAwareTrait::loadModel()`, you
-could do something like this:
-
-```php
-namespace App\Controller;
-
-use Cake\Controller\Controller;
-use Muffin\Footprint\Auth\FootprintAwareTrait;
-
-class AppController extends Controller
-{
-    use CustomTrait {
-        CustomTrait::loadModel as customLoadModel;
-    }
-    use FootprintAwareTrait {
-        FootprintAwareTrait::loadModel as footprintLoadModel;
-        FootprintAwareTrait::loadModel insteadof CustomTrait;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadModel($modelClass = null, $type = 'Table')
-    {
-        $model = parent::loadModel($modelClass, $type);
-        $model = self::footprintLoadModel($model);
-        $model = self::customLoadModel($model);
-        return $model;
-    }
-
-}
-```
 
 ## Patches & Features
 
