@@ -36,12 +36,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Muffin\\Ratings\\": "src"
+            "Muffin\\Footprint\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Muffin\\Ratings\\Test\\": "tests"
+            "Muffin\\Footprint\\Test\\": "tests"
         }
     }
 }
