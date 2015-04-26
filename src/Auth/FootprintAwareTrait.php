@@ -26,7 +26,7 @@ trait FootprintAwareTrait
     public function implementedEvents()
     {
         return parent::implementedEvents() + [
-            'Model.initialize' => [$this, 'footprint'];
+            'Model.initialize' => 'footprint'
         ];
     }
 
@@ -34,7 +34,7 @@ trait FootprintAwareTrait
     {
         try {
             $listener = new FootprintListener($this->_getCurrentUser());
-            $this->_attachRecursive($listener, $event->subject())
+            $this->_attachRecursive($listener, $event->subject());
         } catch (RuntimeException $e) {
         }
     }
@@ -145,6 +145,7 @@ trait FootprintAwareTrait
             $userModel = 'Users';
         }
 
-        return $user instanceof TableRegistry::get($userModel)->entityClass();
+        $entityClass = TableRegistry::get($userModel)->entityClass();
+        return $user instanceof $entityClass;
     }
 }
