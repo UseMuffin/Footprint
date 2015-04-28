@@ -19,17 +19,17 @@ class ArticlesFixture extends TestFixture
 
     public $records = [
         [
-            'name' => 'article 1',
+            'title' => 'article 1',
             'created_by' => 1,
             'modified_by' => 1,
         ],
         [
-            'name' => 'article 2',
+            'title' => 'article 2',
             'created_by' => 1,
             'modified_by' => 2,
         ],
         [
-            'name' => 'article 3',
+            'title' => 'article 3',
             'created_by' => 2,
             'modified_by' => 1,
         ],
