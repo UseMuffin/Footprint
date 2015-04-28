@@ -95,7 +95,10 @@ class FootprintBehavior extends Behavior
                 ($when === 'new' && $new) ||
                 ($when === 'existing' && !$new)
             ) {
-                $entity->set($field, Hash::extract($options, $this->config('propertiesMap.' . $field)));
+                $entity->set(
+                    $field,
+                    current(Hash::extract((array)$options, $this->config('propertiesMap.' . $field)))
+                );
             }
         }
 
