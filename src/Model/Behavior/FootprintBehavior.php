@@ -10,6 +10,12 @@ use UnexpectedValueException;
 
 class FootprintBehavior extends Behavior
 {
+
+    /**
+     * Default config.
+     *
+     * @var array
+     */
     protected $_defaultConfig = [
         'events' => [
             'Model.beforeSave' => [
@@ -23,7 +29,7 @@ class FootprintBehavior extends Behavior
     ];
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function initialize(array $config)
     {
@@ -58,7 +64,7 @@ class FootprintBehavior extends Behavior
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function implementedEvents()
     {
@@ -66,11 +72,12 @@ class FootprintBehavior extends Behavior
     }
 
     /**
-     * [handleEvent description]
+     * Event handler.
+     *
      * @param \Cake\Event\Event $event Event.
-     * @param \Cake\ORM\Query $query Query.
+     * @param \Cake\ORM\Entity $entity Event.
      * @param \ArrayObject $options Options.
-     * @return void
+     * @return bool
      */
     public function handleEvent(Event $event, Entity $entity, ArrayObject $options)
     {
@@ -90,8 +97,7 @@ class FootprintBehavior extends Behavior
                 continue;
             }
 
-            if (
-                $when === 'always' ||
+            if ($when === 'always' ||
                 ($when === 'new' && $new) ||
                 ($when === 'existing' && !$new)
             ) {

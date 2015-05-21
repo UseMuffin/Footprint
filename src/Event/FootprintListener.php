@@ -33,6 +33,9 @@ class FootprintListener implements EventListenerInterface
 
     /**
      * Constructor.
+     *
+     * @param \Cake\ORM\Entity $user User entity.
+     * @param array $config Configuration list.
      */
     public function __construct(Entity $user, array $config = [])
     {
@@ -41,7 +44,7 @@ class FootprintListener implements EventListenerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function implementedEvents()
     {
@@ -55,7 +58,7 @@ class FootprintListener implements EventListenerInterface
      * Universal callback.
      *
      * @param \Cake\Event\Event $event Event.
-     * @param \Cake\ORM\Entity $entity Entity.
+     * @param mixed $ormObject Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      */
