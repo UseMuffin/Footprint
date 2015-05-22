@@ -23,6 +23,11 @@ trait FootprintAwareTrait
      */
     protected $_currentUserInstance;
 
+    /**
+     * Events this trait is interested in.
+     *
+     * @return array
+     */
     public function implementedEvents()
     {
         return parent::implementedEvents() + [
@@ -30,6 +35,12 @@ trait FootprintAwareTrait
         ];
     }
 
+    /**
+     * Try and attach footprint listener to models.
+     *
+     * @param \Cake\Event\Event $event Event.
+     * @return void
+     */
     public function footprint(Event $event)
     {
         try {
@@ -40,8 +51,8 @@ trait FootprintAwareTrait
     }
 
     /**
-     * Recursively attaches the `Muffin\Footprint\Event\FootprintListener` to the loaded model
-     * and all it's associations.
+     * Recursively attaches the `Muffin\Footprint\Event\FootprintListener` to
+     * the loaded model and all it's associations.
      *
      * @param \Muffin\Footprint\Event\FootprintListener $listener Listener.
      * @param \Cake\Datasource\RepositoryInterface $modelClass Repository.
@@ -120,9 +131,10 @@ trait FootprintAwareTrait
     }
 
     /**
-     * [_getUserInstanceFromArray description]
-     * @param  [type] $user [description]
-     * @return [type]       [description]
+     * Get user entity from data array.
+     *
+     * @param array $user User data
+     * @return \Cake\ORM\Entity
      */
     protected function _getUserInstanceFromArray($user)
     {
@@ -135,9 +147,10 @@ trait FootprintAwareTrait
     }
 
     /**
-     * [_checkUserInstanceOf description]
-     * @param  [type] $user [description]
-     * @return [type]       [description]
+     * Check given object is of user entity type.
+     *
+     * @param \Cake\ORM\Entity $user User entity.
+     * @return bool
      */
     protected function _checkUserInstanceOf($user)
     {
