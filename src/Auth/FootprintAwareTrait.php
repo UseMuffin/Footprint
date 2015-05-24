@@ -13,6 +13,13 @@ trait FootprintAwareTrait
 {
 
     /**
+     * User model.
+     *
+     * @var string
+     */
+    protected $_userModel = 'Users';
+
+    /**
      * Instance of currently logged in user.
      *
      * @var \Cake\ORM\Entity
@@ -121,12 +128,7 @@ trait FootprintAwareTrait
      */
     protected function _getUserInstanceFromArray($user)
     {
-        if (!$userModel = $this->_userModel) {
-            $userModel = 'Users';
-        }
-
-        return TableRegistry::get($userModel)
-            ->newEntity($user);
+        return TableRegistry::get($this->_userModel)->newEntity($user);
     }
 
     /**
@@ -137,11 +139,7 @@ trait FootprintAwareTrait
      */
     protected function _checkUserInstanceOf($user)
     {
-        if (!$userModel = $this->_userModel) {
-            $userModel = 'Users';
-        }
-
-        $entityClass = TableRegistry::get($userModel)->entityClass();
+        $entityClass = TableRegistry::get($this->_userModel)->entityClass();
         return $user instanceof $entityClass;
     }
 }
