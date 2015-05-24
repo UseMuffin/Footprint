@@ -2,6 +2,8 @@
 namespace Muffin\Footprint\Auth;
 
 use Cake\Datasource\RepositoryInterface;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
@@ -30,9 +32,9 @@ trait FootprintAwareTrait
      */
     public function implementedEvents()
     {
-        return parent::implementedEvents() + [
-            'Model.initialize' => 'footprint'
-        ];
+        EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
+
+        return parent::implementedEvents();
     }
 
     /**
