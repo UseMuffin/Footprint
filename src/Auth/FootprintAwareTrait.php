@@ -11,12 +11,6 @@ use RuntimeException;
 
 trait FootprintAwareTrait
 {
-    /**
-     * Stack of loaded models.
-     *
-     * @var array
-     */
-    protected $_loadedModels = [];
 
     /**
      * Instance of currently logged in user.
