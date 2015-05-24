@@ -2,6 +2,8 @@
 namespace Muffin\Footprint\Auth;
 
 use Cake\Datasource\RepositoryInterface;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
@@ -9,12 +11,13 @@ use RuntimeException;
 
 trait FootprintAwareTrait
 {
+
     /**
-     * Stack of loaded models.
+     * User model.
      *
-     * @var array
+     * @var string
      */
-    protected $_loadedModels = [];
+    protected $_userModel = 'Users';
 
     /**
      * Instance of currently logged in user.
@@ -24,55 +27,45 @@ trait FootprintAwareTrait
     protected $_currentUserInstance;
 
     /**
+     * Footprint listener instance.
+     *
+     * @var \Cake\Event\EventListenerInterface
+     */
+    protected $_listener;
+
+    /**
      * Events this trait is interested in.
      *
      * @return array
      */
     public function implementedEvents()
     {
-        return parent::implementedEvents() + [
-            'Model.initialize' => 'footprint'
-        ];
+        EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
+
+        return parent::implementedEvents() + ['Auth.afterIdentify' => 'footprint'];
     }
 
     /**
      * Try and attach footprint listener to models.
+     *
+     * It also passing the user record to footprint listener after user is
+     * identified by AuthComponent.
      *
      * @param \Cake\Event\Event $event Event.
      * @return void
      */
     public function footprint(Event $event)
     {
-        try {
-            $listener = new FootprintListener($this->_getCurrentUser());
-            $this->_attachRecursive($listener, $event->subject());
-        } catch (RuntimeException $e) {
-        }
-    }
-
-    /**
-     * Recursively attaches the `Muffin\Footprint\Event\FootprintListener` to
-     * the loaded model and all it's associations.
-     *
-     * @param \Muffin\Footprint\Event\FootprintListener $listener Listener.
-     * @param \Cake\Datasource\RepositoryInterface $modelClass Repository.
-     * @return \Cake\Datasource\RepositoryInterface
-     */
-    protected function _attachRecursive(FootprintListener $listener, RepositoryInterface $modelClass)
-    {
-        $alias = $modelClass->alias();
-
-        if (!in_array($alias, $this->_loadedModels)) {
-            $this->_loadedModels[] = $alias;
-            $modelClass->eventManager()->attach($listener);
-
-            foreach ($modelClass->associations()->keys() as $association) {
-                $assocModelClass = $modelClass->association($association)->target();
-                $this->_attachRecursive($listener, $assocModelClass);
-            }
+        if (!$this->_listener) {
+            $this->_listener = new FootprintListener($this->_getCurrentUser());
         }
 
-        return $modelClass;
+        if ($event->name() === 'Auth.afterIdentify') {
+            $this->_listener->setUser($this->_getCurrentUser($event->data));
+            return;
+        }
+
+        $event->subject()->eventManager()->attach($this->_listener);
     }
 
     /**
@@ -86,13 +79,10 @@ trait FootprintAwareTrait
     {
         $this->_setCurrentUser($user);
 
-        if (!$this->_currentUserInstance) {
-            if (!empty($this->viewVars[$this->_currentUserViewVar])) {
-                $this->_currentUserInstance = $this->viewVars[$this->_currentUserViewVar];
-            }
-            if (!$this->_currentUserInstance) {
-                throw new RuntimeException();
-            }
+        if (!$this->_currentUserInstance &&
+            !empty($this->viewVars[$this->_currentUserViewVar])
+        ) {
+            $this->_currentUserInstance = $this->viewVars[$this->_currentUserViewVar];
         }
 
         return $this->_currentUserInstance;
@@ -138,12 +128,7 @@ trait FootprintAwareTrait
      */
     protected function _getUserInstanceFromArray($user)
     {
-        if (!$userModel = $this->_userModel) {
-            $userModel = 'Users';
-        }
-
-        return TableRegistry::get($userModel)
-            ->newEntity($user);
+        return TableRegistry::get($this->_userModel)->newEntity($user);
     }
 
     /**
@@ -154,11 +139,7 @@ trait FootprintAwareTrait
      */
     protected function _checkUserInstanceOf($user)
     {
-        if (!$userModel = $this->_userModel) {
-            $userModel = 'Users';
-        }
-
-        $entityClass = TableRegistry::get($userModel)->entityClass();
+        $entityClass = TableRegistry::get($this->_userModel)->entityClass();
         return $user instanceof $entityClass;
     }
 }
