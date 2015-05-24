@@ -17,6 +17,15 @@ class FootprintAwareTraitTest extends TestCase
     public function testImplementedEvents()
     {
         $result = $this->controller->implementedEvents();
+        $expected = [
+            'Controller.initialize' => 'beforeFilter',
+            'Controller.beforeRender' => 'beforeRender',
+            'Controller.beforeRedirect' => 'beforeRedirect',
+            'Controller.shutdown' => 'afterFilter',
+            'Auth.afterIdentify' => 'footprint'
+        ];
+        $this->assertEquals($expected, $result);
+
         $expected = EventManager::instance()->__debugInfo()['_listeners'];
         $this->assertSame(['Model.initialize' => '1 listener(s)'], $expected);
     }

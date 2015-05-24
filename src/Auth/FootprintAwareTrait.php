@@ -41,11 +41,14 @@ trait FootprintAwareTrait
     {
         EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
 
-        return parent::implementedEvents();
+        return parent::implementedEvents() + ['Auth.afterIdentify' => 'footprint'];
     }
 
     /**
      * Try and attach footprint listener to models.
+     *
+     * It also passing the user record to footprint listener after user is
+     * identified by AuthComponent.
      *
      * @param \Cake\Event\Event $event Event.
      * @return void
@@ -54,6 +57,11 @@ trait FootprintAwareTrait
     {
         if (!$this->_listener) {
             $this->_listener = new FootprintListener($this->_getCurrentUser());
+        }
+
+        if ($event->name() === 'Auth.afterIdentify') {
+            $this->_listener->setUser($this->_getCurrentUser($event->data));
+            return;
         }
 
         $event->subject()->eventManager()->attach($this->_listener);

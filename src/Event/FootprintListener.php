@@ -55,6 +55,16 @@ class FootprintListener implements EventListenerInterface
     }
 
     /**
+     * Set current user entity.
+     *
+     * @param \Cake\ORM\Entity $entity
+     */
+    public function setUser(Entity $entity)
+    {
+        $this->_currentUser = $user;
+    }
+
+    /**
      * Universal callback.
      *
      * @param \Cake\Event\Event $event Event.
