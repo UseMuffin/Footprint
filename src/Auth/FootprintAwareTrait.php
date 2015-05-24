@@ -26,6 +26,13 @@ trait FootprintAwareTrait
     protected $_currentUserInstance;
 
     /**
+     * Footprint listener instance.
+     *
+     * @var \Cake\Event\EventListenerInterface
+     */
+    protected $_listener;
+
+    /**
      * Events this trait is interested in.
      *
      * @return array
@@ -45,36 +52,11 @@ trait FootprintAwareTrait
      */
     public function footprint(Event $event)
     {
-        try {
-            $listener = new FootprintListener($this->_getCurrentUser());
-            $this->_attachRecursive($listener, $event->subject());
-        } catch (RuntimeException $e) {
-        }
-    }
-
-    /**
-     * Recursively attaches the `Muffin\Footprint\Event\FootprintListener` to
-     * the loaded model and all it's associations.
-     *
-     * @param \Muffin\Footprint\Event\FootprintListener $listener Listener.
-     * @param \Cake\Datasource\RepositoryInterface $modelClass Repository.
-     * @return \Cake\Datasource\RepositoryInterface
-     */
-    protected function _attachRecursive(FootprintListener $listener, RepositoryInterface $modelClass)
-    {
-        $alias = $modelClass->alias();
-
-        if (!in_array($alias, $this->_loadedModels)) {
-            $this->_loadedModels[] = $alias;
-            $modelClass->eventManager()->attach($listener);
-
-            foreach ($modelClass->associations()->keys() as $association) {
-                $assocModelClass = $modelClass->association($association)->target();
-                $this->_attachRecursive($listener, $assocModelClass);
-            }
+        if (!$this->_listener) {
+            $this->_listener = new FootprintListener($this->_getCurrentUser());
         }
 
-        return $modelClass;
+        $event->subject()->eventManager()->attach($this->_listener);
     }
 
     /**
@@ -88,13 +70,10 @@ trait FootprintAwareTrait
     {
         $this->_setCurrentUser($user);
 
-        if (!$this->_currentUserInstance) {
-            if (!empty($this->viewVars[$this->_currentUserViewVar])) {
-                $this->_currentUserInstance = $this->viewVars[$this->_currentUserViewVar];
-            }
-            if (!$this->_currentUserInstance) {
-                throw new RuntimeException();
-            }
+        if (!$this->_currentUserInstance &&
+            !empty($this->viewVars[$this->_currentUserViewVar])
+        ) {
+            $this->_currentUserInstance = $this->viewVars[$this->_currentUserViewVar];
         }
 
         return $this->_currentUserInstance;

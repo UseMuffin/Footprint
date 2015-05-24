@@ -37,7 +37,7 @@ class FootprintListener implements EventListenerInterface
      * @param \Cake\ORM\Entity $user User entity.
      * @param array $config Configuration list.
      */
-    public function __construct(Entity $user, array $config = [])
+    public function __construct(Entity $user = null, array $config = [])
     {
         $this->config($config);
         $this->_currentUser = $user;
