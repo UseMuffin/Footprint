@@ -57,7 +57,8 @@ class FootprintListener implements EventListenerInterface
     /**
      * Set current user entity.
      *
-     * @param \Cake\ORM\Entity $entity
+     * @param \Cake\ORM\Entity $entity Entity.
+     * @return void
      */
     public function setUser(Entity $entity)
     {
