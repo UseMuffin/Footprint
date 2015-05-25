@@ -1,6 +1,6 @@
 {
     "name": "muffin/footprint",
-    "description": "",
+    "description": "CakePHP 3.0+ plugin to allow passing currently logged in user to model layer",
     "type": "cakephp-plugin",
     "keywords": [
         "cakephp",
