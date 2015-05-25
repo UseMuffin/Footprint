@@ -40,7 +40,7 @@ class AppController extends Controller
 }
 ```
 
-This will override the `Cake\Datasource\ModelAwareTrait` to attach the `Muffin\Footprint\Event\FootprintListener`
+This will attach the `Muffin\Footprint\Event\FootprintListener` to models
 which will inject the currently logged in user's instance on `Model.beforeSave` and `Model.afterSave` in the `_footprint`
 key of `$options`. 
 
