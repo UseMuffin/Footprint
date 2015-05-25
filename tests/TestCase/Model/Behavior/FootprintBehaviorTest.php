@@ -58,10 +58,14 @@ class FootprintBehaviorTest extends TestCase
      */
     public function testHandeEventException()
     {
-        $this->Table->behaviors()->Footprint->config('events', [
-            'Model.beforeSave' => [
-                'created_by' => 'invalid'
-        ]]);
+        $this->Table->behaviors()->Footprint->config(
+            'events',
+            [
+                'Model.beforeSave' => [
+                    'created_by' => 'invalid'
+                ]
+            ]
+        );
         $entity = new Entity(['title' => 'new article']);
         $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
     }
