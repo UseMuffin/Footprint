@@ -49,4 +49,20 @@ class FootprintBehaviorTest extends TestCase
         $expected = ['id' => $entity->id, 'title' => 'new title', 'created_by' => 2, 'modified_by' => 3];
         $this->assertSame($expected, $entity->extract(['id', 'title', 'created_by', 'modified_by']));
     }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage When should be one of "always", "new" or "existing". The passed value "invalid" is invalid
+     *
+     * @return void
+     */
+    public function testHandeEventException()
+    {
+        $this->Table->behaviors()->Footprint->config('events', [
+            'Model.beforeSave' => [
+                'created_by' => 'invalid'
+        ]]);
+        $entity = new Entity(['title' => 'new article']);
+        $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
+    }
 }
