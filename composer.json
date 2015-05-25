@@ -42,7 +42,8 @@
     "autoload-dev": {
         "psr-4": {
             "Muffin\\Footprint\\Test\\": "tests",
-            "TestApp\\": "tests/test_app/TestApp"
+            "TestApp\\": "tests/test_app/TestApp",
+            "Cake\\Test\\Fixture\\": "vendor/cakephp/cakephp/tests/Fixture"
         }
     }
 }

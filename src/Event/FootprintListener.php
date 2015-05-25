@@ -62,7 +62,7 @@ class FootprintListener implements EventListenerInterface
      */
     public function setUser(Entity $entity)
     {
-        $this->_currentUser = $user;
+        $this->_currentUser = $entity;
     }
 
     /**

@@ -8,10 +8,22 @@ use TestApp\Controller\ArticlesController;
 
 class FootprintAwareTraitTest extends TestCase
 {
+
+    public $fixtures = ['core.Users', 'plugin.Muffin/Footprint.Articles'];
+
     public function setUp()
     {
         $this->controller = new ArticlesController(null, null, null, new EventManager());
+
         $this->controller->loadComponent('Auth');
+        $this->controller->Auth->request->data = [
+            'username' => 'mariano',
+            'password' => 'cake'
+        ];
+        $this->controller->Auth->config('authenticate', ['Form']);
+
+        $Users = TableRegistry::get('Users');
+        $Users->updateAll(['password' => password_hash('cake', PASSWORD_BCRYPT)], []);
     }
 
     public function testImplementedEvents()
@@ -28,5 +40,14 @@ class FootprintAwareTraitTest extends TestCase
 
         $expected = EventManager::instance()->__debugInfo()['_listeners'];
         $this->assertSame(['Model.initialize' => '1 listener(s)'], $expected);
+    }
+
+    public function testAfterIdentify()
+    {
+        $this->assertNull($this->controller->getCurrentUserInstance());
+
+        $this->controller->Auth->identify();
+
+        $this->assertNotNull($this->controller->getCurrentUserInstance());
     }
 }
