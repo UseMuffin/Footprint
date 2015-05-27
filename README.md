@@ -36,13 +36,25 @@ use Muffin\Footprint\Auth\FootprintAwareTrait;
 
 class AppController extends Controller
 {
-	use FootprintAwareTrait;
+    use FootprintAwareTrait;
 }
 ```
 
 This will attach the `Muffin\Footprint\Event\FootprintListener` to models
 which will inject the currently logged in user's instance on `Model.beforeSave` and `Model.afterSave` in the `_footprint`
-key of `$options`. 
+key of `$options`.
+
+The user record provided by `AuthComponent` is converted to `User` entity before 
+passing to models. If your `AuthComponent` is configured to use a non-default 
+users table you must set the `$_userModel` property of the trait to same table:
+
+
+```php
+public function beforeFilter(\Cake\Event\Event $event)
+{
+	$this->_userModel = 'Members';
+}
+```
 
 ### Behavior
 
