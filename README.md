@@ -101,8 +101,7 @@ http://github.com/usemuffin/footprint/issues
 
 ## Credits
 
-This was initially inspired by [Ceeram/Blame] which was just a proof of concept and in such, was not easy
-(or even possible) to extend/use for more than the `modified_by` and `created_by` fields.
+This was originally inspired by [Ceeram/Blame].
 
 ## License
 
