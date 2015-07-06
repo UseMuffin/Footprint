@@ -121,6 +121,22 @@ trait FootprintAwareTrait
     }
 
     /**
+     * Temporarily disable the listener on `Model.initialize` when trying to
+     * fetch instantiate the table and avoid an infinite loop.
+     *
+     * @param string $method Method name.
+     * @param array $args Arguments to pass to the method.
+     * @return \Cake\ORM\Table The users table.
+     */
+    protected function _circumventEventManager($method, $args = [])
+    {
+        EventManager::instance()->off('Model.initialize', [$this, 'footprint']);
+        $result = call_user_func_array([TableRegistry::get($this->_userModel), $method], $args);
+        EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
+        return $result;
+    }
+
+    /**
      * Get user entity from data array.
      *
      * @param array $user User data
@@ -128,7 +144,7 @@ trait FootprintAwareTrait
      */
     protected function _getUserInstanceFromArray($user)
     {
-        return TableRegistry::get($this->_userModel)->newEntity($user);
+        return $this->_circumventEventManager('newEntity', [$user]);
     }
 
     /**
@@ -139,7 +155,7 @@ trait FootprintAwareTrait
      */
     protected function _checkUserInstanceOf($user)
     {
-        $entityClass = TableRegistry::get($this->_userModel)->entityClass();
+        $entityClass = $this->_circumventEventManager('entityClass');
         return $user instanceof $entityClass;
     }
 }
