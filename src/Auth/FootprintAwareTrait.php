@@ -144,7 +144,9 @@ trait FootprintAwareTrait
      */
     protected function _getUserInstanceFromArray($user)
     {
-        return $this->_circumventEventManager('newEntity', [$user]);
+        $primaryKey = TableRegistry::get($this->_userModel)->primaryKey();
+        $options = ['accessibleFields' => [$primaryKey => true]];
+        return $this->_circumventEventManager('newEntity', [$user, $options]);
     }
 
     /**
