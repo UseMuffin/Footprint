@@ -5,6 +5,7 @@ use ArrayObject;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
+use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use UnexpectedValueException;
 
@@ -40,7 +41,8 @@ class FootprintBehavior extends Behavior
         $config = $this->config();
 
         foreach ($config['events'] as $name => $options) {
-            foreach ($options as $field => $when) {
+            $this->config('events.' . $name, Hash::normalize($options));
+            foreach (array_keys($this->config('events.' . $name)) as $field) {
                 if (!in_array($field, $config['propertiesMap']) && !isset($config['propertiesMap'][$field])) {
                     $config['propertiesMap'][] = $field;
                 }
@@ -64,22 +66,35 @@ class FootprintBehavior extends Behavior
     }
 
     /**
-     * {@inheritDoc}
+     * Injects configured fields into finder conditions.
+     *
+     * @param \Cake\Event\Event $event
+     * @param \Cake\ORM\Query $query
+     * @param \ArrayObject $options
+     * @return void
      */
-    public function implementedEvents()
+    public function beforeFind(Event $event, Query $query, ArrayObject $options)
     {
-        return array_fill_keys(array_keys($this->config('events')), 'handleEvent');
+        $eventName = $event->name();
+        $config = $this->config('events.' . $eventName);
+
+        foreach (array_keys($config) as $field) {
+            $path = $this->config('propertiesMap.' . $field);
+            $query->where([
+                $field => current(Hash::extract((array)$options, $path))
+            ]);
+        }
     }
 
     /**
-     * Event handler.
+     * Injects configured field values into entity if those fields are not dirty.
      *
      * @param \Cake\Event\Event $event Event.
      * @param \Cake\ORM\Entity $entity Event.
      * @param \ArrayObject $options Options.
      * @return bool
      */
-    public function handleEvent(Event $event, Entity $entity, ArrayObject $options)
+    public function beforeSave(Event $event, Entity $entity, ArrayObject $options)
     {
         $eventName = $event->name();
         $events = $this->config('events');

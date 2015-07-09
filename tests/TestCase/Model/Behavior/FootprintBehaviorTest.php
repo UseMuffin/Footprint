@@ -17,7 +17,17 @@ class FootprintBehaviorTest extends TestCase
         parent::setUp();
 
         $table = TableRegistry::get('Muffin/Footprint.Articles');
-        $table->addBehavior('Muffin/Footprint.Footprint');
+        $table->addBehavior('Muffin/Footprint.Footprint', [
+            'events' => [
+                'Model.beforeSave' => [
+                    'created_by' => 'new',
+                    'modified_by' => 'always',
+                ],
+                'Model.beforeFind' => [
+                    'created_by',
+                ],
+            ],
+        ]);
 
         $this->Table = $table;
         $this->Behavior = $table->behaviors()->Footprint;
@@ -48,6 +58,16 @@ class FootprintBehaviorTest extends TestCase
         $entity = $this->Table->save($entity, ['_footprint' => $footprint]);
         $expected = ['id' => $entity->id, 'title' => 'new title', 'created_by' => 2, 'modified_by' => 3];
         $this->assertSame($expected, $entity->extract(['id', 'title', 'created_by', 'modified_by']));
+    }
+
+    public function testFind()
+    {
+        $result = $this->Table->find('all', ['_footprint' => $this->footprint])
+            ->hydrate(false)
+            ->first();
+
+        $expected = ['id' => 3, 'title' => 'article 3', 'created_by' => 2, 'modified_by' => 1];
+        $this->assertSame($expected, $result);
     }
 
     /**
