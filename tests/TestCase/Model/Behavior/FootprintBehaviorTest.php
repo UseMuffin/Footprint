@@ -56,7 +56,7 @@ class FootprintBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function testHandeEventException()
+    public function testHandleEventException()
     {
         $this->Table->behaviors()->Footprint->config(
             'events',
