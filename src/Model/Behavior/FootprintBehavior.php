@@ -68,9 +68,9 @@ class FootprintBehavior extends Behavior
     /**
      * Injects configured fields into finder conditions.
      *
-     * @param \Cake\Event\Event $event
-     * @param \Cake\ORM\Query $query
-     * @param \ArrayObject $options
+     * @param \Cake\Event\Event $event Event.
+     * @param \Cake\ORM\Query $query Query.
+     * @param \ArrayObject $options Options.
      * @return void
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options)
@@ -90,7 +90,7 @@ class FootprintBehavior extends Behavior
      * Injects configured field values into entity if those fields are not dirty.
      *
      * @param \Cake\Event\Event $event Event.
-     * @param \Cake\ORM\Entity $entity Event.
+     * @param \Cake\ORM\Entity $entity Entity.
      * @param \ArrayObject $options Options.
      * @return bool
      */
