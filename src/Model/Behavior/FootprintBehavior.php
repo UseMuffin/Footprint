@@ -122,7 +122,5 @@ class FootprintBehavior extends Behavior
                 );
             }
         }
-
-        return true;
     }
 }
