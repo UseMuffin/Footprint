@@ -92,7 +92,7 @@ class FootprintBehavior extends Behavior
      * @param \Cake\Event\Event $event Event.
      * @param \Cake\ORM\Entity $entity Entity.
      * @param \ArrayObject $options Options.
-     * @return bool
+     * @return void
      */
     public function beforeSave(Event $event, Entity $entity, ArrayObject $options)
     {
