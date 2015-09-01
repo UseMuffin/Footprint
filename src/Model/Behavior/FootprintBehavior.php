@@ -80,9 +80,12 @@ class FootprintBehavior extends Behavior
 
         foreach (array_keys($config) as $field) {
             $path = $this->config('propertiesMap.' . $field);
-            $query->where([
-                $this->_table->aliasField($field) => current(Hash::extract((array)$options, $path))
-            ]);
+            $value = current(Hash::extract((array)$options, $path));
+            if (!empty($value)) {
+                $query->where([
+                    $field => current(Hash::extract((array)$options, $path))
+                ]);
+            }
         }
     }
 
