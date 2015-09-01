@@ -76,7 +76,7 @@ class FootprintBehavior extends Behavior
     public function beforeFind(Event $event, Query $query, ArrayObject $options)
     {
         $eventName = $event->name();
-        $config = (array)$this->config('events.' . $eventName);
+        $config = Hash::normalize((array)$this->config('events.' . $eventName));
 
         foreach (array_keys($config) as $field) {
             $path = $this->config('propertiesMap.' . $field);
