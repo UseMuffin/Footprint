@@ -97,7 +97,7 @@ trait FootprintAwareTrait
      */
     protected function _setCurrentUser($user = null)
     {
-        if (!$user && !$user = $this->Auth->user()) {
+        if (!$this->Auth || (!$user && !$user = $this->Auth->user())) {
             return false;
         }
 
