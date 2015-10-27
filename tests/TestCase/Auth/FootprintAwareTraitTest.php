@@ -1,7 +1,9 @@
 <?php
 namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 
+use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use TestApp\Controller\ArticlesController;
@@ -49,5 +51,18 @@ class FootprintAwareTraitTest extends TestCase
         $this->controller->Auth->identify();
 
         $this->assertNotNull($this->controller->getCurrentUserInstance());
+    }
+
+    /**
+     * Tests for the case where the Auth component is not loaded, but FootprintAwareTrait is.
+     *
+     * @return void
+     */
+    public function testNoAuthRegression()
+    {
+        unset($this->controller->Auth);
+        $this->controller->footprint(new Event('Model.initialize', new Table(), ['id' => 1]));
+
+        $this->assertNull($this->controller->getCurrentUserInstance());
     }
 }
