@@ -41,8 +41,8 @@ class AppController extends Controller
 ```
 
 This will attach the `Muffin\Footprint\Event\FootprintListener` to models
-which will inject the currently logged in user's instance on `Model.beforeSave` and `Model.afterSave` in the `_footprint`
-key of `$options`.
+which will inject the currently logged in user's instance on `Model.beforeSave` 
+and `Model.beforeFind` in the `_footprint` key of `$options`.
 
 The user record provided by `AuthComponent` is converted to `User` entity before 
 passing to models. If your `AuthComponent` is configured to use a non-default 
