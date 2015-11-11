@@ -19,6 +19,7 @@ class FootprintListenerTest extends TestCase
         $expected = [
             'Model.beforeSave' => ['priority' => -100, 'callable' => 'handleEvent'],
             'Model.beforeFind' => ['priority' => -100, 'callable' => 'handleEvent'],
+            'Model.beforeValidate' => ['priority' => -100, 'callable' => 'handleEvent'],
         ];
         $this->assertEquals($expected, $result);
     }
