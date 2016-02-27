@@ -23,9 +23,7 @@ class FootprintBehaviorTest extends TestCase
                     'created_by' => 'new',
                     'modified_by' => 'always',
                 ],
-                'Model.beforeFind' => [
-                    'created_by',
-                ],
+                'Model.beforeFind' => 'created_by',
             ],
         ]);
 
