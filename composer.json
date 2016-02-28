@@ -45,5 +45,10 @@
             "TestApp\\": "tests/test_app/TestApp",
             "Cake\\Test\\Fixture\\": "vendor/cakephp/cakephp/tests/Fixture"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
