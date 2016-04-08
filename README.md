@@ -68,7 +68,7 @@ $this->addBehavior('Muffin/Footprint.Footprint');
 You can customize that like so:
 
 ```php
-$this->addBehavior('Footprint', [
+$this->addBehavior('Muffin/Footprint.Footprint', [
     'events' => [
         'Model.beforeSave' => [
         	'user_id' => 'new',
