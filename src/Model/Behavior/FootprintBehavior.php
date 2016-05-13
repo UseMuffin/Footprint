@@ -41,7 +41,7 @@ class FootprintBehavior extends Behavior
         $config = $this->config();
 
         foreach ($config['events'] as $name => $options) {
-            $this->config('events.' . $name, Hash::normalize($options));
+            $this->config('events.' . $name, Hash::normalize((array)$options));
             foreach (array_keys($this->config('events.' . $name)) as $field) {
                 if (!in_array($field, $config['propertiesMap']) && !isset($config['propertiesMap'][$field])) {
                     $config['propertiesMap'][] = $field;
@@ -76,13 +76,13 @@ class FootprintBehavior extends Behavior
     public function beforeFind(Event $event, Query $query, ArrayObject $options)
     {
         $eventName = $event->name();
-        $config = (array)$this->config('events.' . $eventName);
+        $config = $this->config('events.' . $eventName);
 
         foreach (array_keys($config) as $field) {
             $path = $this->config('propertiesMap.' . $field);
-            $query->where([
-                $this->_table->aliasField($field) => current(Hash::extract((array)$options, $path))
-            ]);
+            if ($value = Hash::get((array)$options, $path)) {
+                $query->where([$this->_table->aliasField($field) => $value]);
+            }
         }
     }
 

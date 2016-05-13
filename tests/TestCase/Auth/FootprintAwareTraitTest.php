@@ -52,6 +52,7 @@ class FootprintAwareTraitTest extends TestCase
 
         $user = $this->controller->getCurrentUserInstance();
         $this->assertInstanceOf('\Cake\ORM\Entity', $user);
+        $this->assertTrue($user->accessible('id'));
         $this->assertTrue(isset($user->id));
     }
 
