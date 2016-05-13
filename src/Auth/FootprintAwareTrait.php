@@ -61,7 +61,8 @@ trait FootprintAwareTrait
         }
 
         if ($event->name() === 'Auth.afterIdentify') {
-            $this->_listener->setUser($this->_getCurrentUser($event->data));
+            if (is_array($event->data))
+                $this->_listener->setUser($this->_getCurrentUser($event->data));
             return;
         }
 
@@ -77,7 +78,17 @@ trait FootprintAwareTrait
      */
     protected function _getCurrentUser($user = null)
     {
-        $this->_setCurrentUser($user);
+        $data = $user;
+
+        if (is_array($user) && !array_key_exists('id', $user)) {
+            foreach ($user as $u) {
+                if (array_key_exists('id', $u)) {
+                    $data = $u;
+                }
+            }
+        }
+
+        $this->_setCurrentUser($data);
 
         if (!$this->_currentUserInstance &&
             !empty($this->viewVars[$this->_currentUserViewVar])
