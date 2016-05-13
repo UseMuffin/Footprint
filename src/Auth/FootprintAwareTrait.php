@@ -61,8 +61,9 @@ trait FootprintAwareTrait
         }
 
         if ($event->name() === 'Auth.afterIdentify') {
-            if (is_array($event->data))
+            if (is_array($event->data)) {
                 $this->_listener->setUser($this->_getCurrentUser($event->data));
+            }
             return;
         }
 
