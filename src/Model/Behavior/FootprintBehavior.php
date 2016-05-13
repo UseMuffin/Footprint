@@ -89,7 +89,7 @@ class FootprintBehavior extends Behavior
                     return;
                 }
                 $alias = $this->_table->aliasField($field);
-                !$check && $check = preg_match('/' . $alias . '/', $expression->sql($query->valueBinder()));
+                !$check && $check = preg_match('/^' . $alias . '/', $expression->sql($query->valueBinder()));
             });
 
             if (!$check && $value = Hash::get((array)$options, $path)) {
