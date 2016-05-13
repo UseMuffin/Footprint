@@ -1,13 +1,10 @@
 <?php
 namespace Muffin\Footprint\Auth;
 
-use Cake\Datasource\RepositoryInterface;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
-use RuntimeException;
 
 trait FootprintAwareTrait
 {
@@ -93,11 +90,11 @@ trait FootprintAwareTrait
      * fallsback to `Cake\Controller\Component\AuthComponent::user()`.
      *
      * @param \Cake\ORM\Entity|array $user User.
-     * @return \Cake\ORM\Entity
+     * @return \Cake\ORM\Entity|bool
      */
     protected function _setCurrentUser($user = null)
     {
-        if (!$this->Auth || (!$user && !$user = $this->Auth->user())) {
+        if ($user === null && (empty($this->Auth) || !$user = $this->Auth->user())) {
             return false;
         }
 
