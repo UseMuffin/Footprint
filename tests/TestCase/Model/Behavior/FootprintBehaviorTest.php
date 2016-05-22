@@ -4,7 +4,6 @@ namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Muffin\Footprint\Model\Behavior\FootprintBehavior;
 
 class FootprintBehaviorTest extends TestCase
 {
@@ -65,6 +64,16 @@ class FootprintBehaviorTest extends TestCase
             ->first();
 
         $expected = ['id' => 3, 'title' => 'article 3', 'created_by' => 2, 'modified_by' => 1];
+        $this->assertSame($expected, $result);
+
+        // Test to show value of "id" is not used from footprint if
+        // "Articles.created_by" is already set in condition.
+        $result = $this->Table->find('all', ['_footprint' => $this->footprint])
+            ->where(['Articles.created_by' => 1])
+            ->hydrate(false)
+            ->first();
+
+        $expected = ['id' => 1, 'title' => 'article 1', 'created_by' => 1, 'modified_by' => 1];
         $this->assertSame($expected, $result);
     }
 
