@@ -42,12 +42,13 @@ class FootprintBehavior extends Behavior
         $config = $this->config();
 
         foreach ($config['events'] as $name => $options) {
-            $this->config('events.' . $name, Hash::normalize((array)$options));
-            foreach (array_keys($this->config('events.' . $name)) as $field) {
+            $options = Hash::normalize((array)$options);
+            foreach (array_keys($options) as $field) {
                 if (!in_array($field, $config['propertiesMap']) && !isset($config['propertiesMap'][$field])) {
                     $config['propertiesMap'][] = $field;
                 }
             }
+            $this->_config['events'][$name] = $options;
         }
 
         foreach ($config['propertiesMap'] as $property => $map) {
@@ -77,8 +78,11 @@ class FootprintBehavior extends Behavior
     public function beforeFind(Event $event, Query $query, ArrayObject $options)
     {
         $eventName = $event->name();
-        $config = $this->config('events.' . $eventName);
+        if (empty($this->_config['events'][$eventName])) {
+            return;
+        }
 
+        $config = $this->_config['events'][$eventName];
         foreach (array_keys($config) as $field) {
             $path = $this->config('propertiesMap.' . $field);
 
@@ -109,11 +113,13 @@ class FootprintBehavior extends Behavior
     public function beforeSave(Event $event, Entity $entity, ArrayObject $options)
     {
         $eventName = $event->name();
-        $events = $this->config('events');
+        if (empty($this->_config['events'][$eventName])) {
+            return;
+        }
 
         $new = $entity->isNew() !== false;
 
-        foreach ($events[$eventName] as $field => $when) {
+        foreach ($this->_config['events'][$eventName] as $field => $when) {
             if (!in_array($when, ['always', 'new', 'existing'])) {
                 throw new UnexpectedValueException(
                     sprintf('When should be one of "always", "new" or "existing". The passed value "%s" is invalid', $when)
