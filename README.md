@@ -58,7 +58,7 @@ public function beforeFilter(\Cake\Event\Event $event)
 
 ### Behavior
 
-To use the included behavior to automatically update the `created_by` and `updated_by` fields of a record for example,
+To use the included behavior to automatically update the `created_by` and `modified_by` fields of a record for example,
 add the following to your table's `initialize()` method:
 
 ```php
