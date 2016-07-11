@@ -8,10 +8,13 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use TestApp\Controller\ArticlesController;
 
+/**
+ * @property ArticlesController controller
+ */
 class FootprintAwareTraitTest extends TestCase
 {
 
-    public $fixtures = ['core.Users', 'plugin.Muffin/Footprint.Articles'];
+    public $fixtures = ['core.Users', 'plugin.Muffin/Footprint.Articles', 'plugin.Muffin/Footprint.Authors'];
 
     public function setUp()
     {
@@ -26,6 +29,13 @@ class FootprintAwareTraitTest extends TestCase
 
         $Users = TableRegistry::get('Users');
         $Users->updateAll(['password' => password_hash('cake', PASSWORD_BCRYPT)], []);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        TableRegistry::clear();
+        EventManager::instance()->off('Model.initialize');
     }
 
     public function testImplementedEvents()
@@ -67,5 +77,20 @@ class FootprintAwareTraitTest extends TestCase
         $this->controller->footprint(new Event('Model.initialize', new Table(), ['id' => 1]));
 
         $this->assertNull($this->controller->getCurrentUserInstance());
+    }
+
+    /**
+     * Tests for the case where model is loaded in controller's initialize() method
+     *
+     * @return void
+     */
+    public function testLoadingModelInInitialize()
+    {
+        $this->controller->Auth->identify();
+        $entity = $this->controller->Authors->newEntity(['name' => 'new author']);
+        $this->controller->Authors->save($entity);
+
+        $expected = ['id' => $entity->id, 'name' => 'new author', 'created_by' => 1, 'modified_by' => 1];
+        $this->assertSame($expected, $entity->extract(['id', 'name', 'created_by', 'modified_by']));
     }
 }

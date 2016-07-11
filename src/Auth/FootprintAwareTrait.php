@@ -8,7 +8,6 @@ use Cake\Network\Response;
 use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
 
-
 trait FootprintAwareTrait
 {
 
