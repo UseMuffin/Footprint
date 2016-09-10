@@ -59,6 +59,7 @@ trait FootprintAwareTrait
 
         if ($event->name() === 'Auth.afterIdentify') {
             $this->_listener->setUser($this->_getCurrentUser($event->data[0]));
+
             return;
         }
 
@@ -94,11 +95,16 @@ trait FootprintAwareTrait
      */
     protected function _setCurrentUser($user = null)
     {
-        if ($user === null && (empty($this->Auth) || !$user = $this->Auth->user())) {
+        if ($user === null && !empty($this->Auth)) {
+            $user = $this->Auth->user();
+        }
+
+        if (!$user) {
             return false;
         }
 
         $this->_currentUserInstance = $this->_getUserInstance($user);
+
         return $this->_currentUserInstance;
     }
 
@@ -130,6 +136,7 @@ trait FootprintAwareTrait
         EventManager::instance()->off('Model.initialize', [$this, 'footprint']);
         $result = call_user_func_array([TableRegistry::get($this->_userModel), $method], $args);
         EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
+
         return $result;
     }
 
@@ -142,6 +149,7 @@ trait FootprintAwareTrait
     protected function _getUserInstanceFromArray($user)
     {
         $options = ['accessibleFields' => ['*' => true], 'validate' => false];
+
         return $this->_circumventEventManager('newEntity', [$user, $options]);
     }
 
@@ -154,6 +162,7 @@ trait FootprintAwareTrait
     protected function _checkUserInstanceOf($user)
     {
         $entityClass = $this->_circumventEventManager('entityClass');
+
         return $user instanceof $entityClass;
     }
 }
