@@ -90,6 +90,7 @@ class FootprintBehavior extends Behavior
             $query->traverseExpressions(function ($expression) use (&$check, $field, $query) {
                 if ($expression instanceof IdentifierExpression) {
                     !$check && $check = $expression->getIdentifier() === $field;
+
                     return;
                 }
                 $alias = $this->_table->aliasField($field);

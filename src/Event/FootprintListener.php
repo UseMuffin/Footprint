@@ -52,6 +52,7 @@ class FootprintListener implements EventListenerInterface
     {
         return array_map(function ($priority) {
             $callable = 'handleEvent';
+
             return compact('callable', 'priority');
         }, $this->config('events'));
     }
