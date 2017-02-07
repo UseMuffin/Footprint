@@ -16,7 +16,7 @@ It comes bundled with the `FootprintBehavior` to allow you control over columns 
 Using [Composer][composer]:
 
 ```
-composer require muffin/footprint:dev-master
+composer require muffin/footprint
 ```
 
 You then need to load the plugin. In `boostrap.php`, something like:
