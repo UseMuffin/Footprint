@@ -52,7 +52,7 @@ users table you must set the `$_userModel` property of the trait to same table:
 public function initialize()
 {
     parent::initialize();
-	$this->_userModel = 'YourPlugin.Members'; // Footprint
+	$this->_userModel = 'YourPlugin.Members';
     this->loadComponent('Auth', [
         'authenticate' => [
             'Form' => [
