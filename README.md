@@ -48,11 +48,18 @@ The user record provided by `AuthComponent` is converted to `User` entity before
 passing to models. If your `AuthComponent` is configured to use a non-default 
 users table you must set the `$_userModel` property of the trait to same table:
 
-
 ```php
-public function beforeFilter(\Cake\Event\Event $event)
+public function initialize()
 {
-	$this->_userModel = 'Members';
+    parent::initialize();
+	$this->_userModel = 'YourPlugin.Members';
+    this->loadComponent('Auth', [
+        'authenticate' => [
+            'Form' => [
+                'userModel' => $this->_userModel,
+            ],
+        ],
+    ]);
 }
 ```
 
