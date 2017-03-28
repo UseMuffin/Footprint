@@ -27,7 +27,6 @@ class FootprintBehaviorTest extends TestCase
         ]);
 
         $this->Table = $table;
-        $this->Behavior = $table->behaviors()->Footprint;
         $this->footprint = new Entity([
             'id' => 2,
             'company' => new Entity(['id' => 5])
@@ -38,7 +37,6 @@ class FootprintBehaviorTest extends TestCase
     {
         parent::tearDown();
         TableRegistry::clear();
-        unset($this->Behavior);
     }
 
     public function testSave()
