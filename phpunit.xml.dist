@@ -8,6 +8,7 @@
     <testsuites>
         <testsuite name="Slug Test Cases">
             <directory>./tests/</directory>
+            <file>./tests/TestCase/Model/Behavior/FootprintBehaviorTest2.php</file>
         </testsuite>
     </testsuites>
 
