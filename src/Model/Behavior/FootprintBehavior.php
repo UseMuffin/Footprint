@@ -73,7 +73,12 @@ class FootprintBehavior extends Behavior
     public function implementedEvents()
     {
         /* map all configured events to a single handler */
-        return array_map(function () { return 'dispatch'; }, this->_config['events']);
+        return array_map(
+            function () {
+                return 'dispatch';
+            },
+            $this->_config['events']
+        );
     }
 
     /**
