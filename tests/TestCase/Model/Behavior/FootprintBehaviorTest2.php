@@ -40,7 +40,7 @@ class FootprintBehaviorTest2 extends TestCase
 
     public function testSave()
     {
-		/* test if beforeRules event gives the same result on save as beforeSave would */
+        /* test if beforeRules event gives the same result on save as beforeSave would */
 
         $entity = new Entity(['title' => 'new article']);
         $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
@@ -62,8 +62,8 @@ class FootprintBehaviorTest2 extends TestCase
      */
     public function testDispatchException()
     {
-		$behavior = $this->Table->behaviors()->Footprint;
-		$behavior->config('events', ['Model.beforeMarshal' => ['modified_by']]);
+        $behavior = $this->Table->behaviors()->Footprint;
+        $behavior->config('events', ['Model.beforeMarshal' => ['modified_by']]);
         $this->Table->eventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
         $entity = $this->Table->newEntity([]);
     }

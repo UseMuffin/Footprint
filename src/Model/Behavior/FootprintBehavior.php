@@ -73,39 +73,41 @@ class FootprintBehavior extends Behavior
     public function implementedEvents()
     {
         /* map all configured events to a single handler */
-        return array_map(function () { return 'dispatch'; },
-            $this->_config['events']);
+        return array_map(function () { return 'dispatch'; }, this->_config['events']);
     }
 
     /**
      * Dispatch an event to the corresponding function
      * Called by the event system as instructed by implementedEvents()
-     * @param Event $event
-     * @param Query|EntityInterface $data
-     * @param ArrayObject $options
+     * @param Event $event Event.
+     * @param Query|EntityInterface $data Query or Entity.
+     * @param ArrayObject $options Options.
+     * @return void
      */
     public function dispatch(Event $event, $data, ArrayObject $options)
     {
         $eventName = $event->name();
-        if (empty($this->_config['events'][$eventName]))
+        if (empty($this->_config['events'][$eventName])) {
             return;
+        }
 
         $fields = $this->_config['events'][$eventName];
 
-        if ($data instanceof EntityInterface)
+        if ($data instanceof EntityInterface) {
             $this->injectEntity($data, $options, $fields);
-        else if ($data instanceof Query)
+        } elseif ($data instanceof Query) {
             $this->injectConditions($data, $options, $fields);
-        else
+        } else {
             throw new \InvalidArgumentException("Event {$eventName} is not supported.");
+        }
     }
 
     /**
      * Injects configured fields into finder conditions.
      *
-     * @param \Cake\Event\Event $event Event.
      * @param \Cake\ORM\Query $query Query.
      * @param \ArrayObject $options Options.
+     * @param array $fields Field configuration.
      * @return void
      */
     protected function injectConditions(Query $query, ArrayObject $options, array $fields)
@@ -133,9 +135,9 @@ class FootprintBehavior extends Behavior
     /**
      * Injects configured field values into entity if those fields are not dirty.
      *
-     * @param \Cake\Event\Event $event Event.
      * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @param \ArrayObject $options Options.
+     * @param array $fields Field configuration.
      * @return void
      */
     protected function injectEntity(EntityInterface $entity, ArrayObject $options, array $fields)
