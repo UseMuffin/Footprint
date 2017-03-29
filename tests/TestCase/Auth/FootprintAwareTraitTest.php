@@ -1,6 +1,7 @@
 <?php
 namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\ORM\Table;
@@ -40,8 +41,15 @@ class FootprintAwareTraitTest extends TestCase
         ];
         $this->assertEquals($expected, $result);
 
-        $expected = EventManager::instance()->__debugInfo()['_listeners'];
-        $this->assertSame(['Model.initialize' => '1 listener(s)'], $expected);
+        if (version_compare(phpversion(), '5.5.0') !== 1) {
+            $expected = ['Model.initialize' => '1 listener(s)'];
+        } else {
+            // For newer CakePHP version implementedEvents() is already called on
+            // controller instance creation so calling it again attaches listener twice
+            $expected = ['Model.initialize' => '2 listener(s)'];
+        }
+
+        $this->assertSame($expected, EventManager::instance()->__debugInfo()['_listeners']);
     }
 
     public function testAfterIdentify()
