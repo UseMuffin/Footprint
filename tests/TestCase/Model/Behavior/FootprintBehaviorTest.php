@@ -81,7 +81,7 @@ class FootprintBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function testHandleEventException()
+    public function testInjectEntityException()
     {
         $this->Table->behaviors()->Footprint->config(
             'events',
@@ -93,5 +93,17 @@ class FootprintBehaviorTest extends TestCase
         );
         $entity = new Entity(['title' => 'new article']);
         $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Event Model.beforeMarshal is not supported.
+     */
+    public function testDispatchException()
+    {
+        $behavior = $this->Table->behaviors()->Footprint;
+        $behavior->config('events', ['Model.beforeMarshal' => ['modified_by']]);
+        $this->Table->eventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
+        $entity = $this->Table->newEntity([]);
     }
 }
