@@ -99,9 +99,9 @@ class FootprintBehavior extends Behavior
         $fields = $this->_config['events'][$eventName];
 
         if ($data instanceof EntityInterface) {
-            $this->injectEntity($data, $options, $fields);
+            $this->_injectEntity($data, $options, $fields);
         } elseif ($data instanceof Query) {
-            $this->injectConditions($data, $options, $fields);
+            $this->_injectConditions($data, $options, $fields);
         } else {
             throw new \InvalidArgumentException("Event {$eventName} is not supported.");
         }
@@ -115,7 +115,7 @@ class FootprintBehavior extends Behavior
      * @param array $fields Field configuration.
      * @return void
      */
-    protected function injectConditions(Query $query, ArrayObject $options, array $fields)
+    protected function _injectConditions(Query $query, ArrayObject $options, array $fields)
     {
         foreach (array_keys($fields) as $field) {
             $path = $this->config('propertiesMap.' . $field);
@@ -145,7 +145,7 @@ class FootprintBehavior extends Behavior
      * @param array $fields Field configuration.
      * @return void
      */
-    protected function injectEntity(EntityInterface $entity, ArrayObject $options, array $fields)
+    protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields)
     {
         $new = $entity->isNew() !== false;
 
