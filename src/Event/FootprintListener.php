@@ -20,6 +20,7 @@ class FootprintListener implements EventListenerInterface
         'events' => [
             'Model.beforeFind' => -100,
             'Model.beforeRules' => -100,
+            'Model.beforeSave' => -100,
             'Model.beforeValidate' => -100,
             'Model.beforeDelete' => -100,
         ],
