@@ -84,9 +84,9 @@ class FootprintBehavior extends Behavior
     /**
      * Dispatch an event to the corresponding function
      * Called by the event system as instructed by implementedEvents()
-     * @param Event $event Event.
-     * @param Query|EntityInterface $data Query or Entity.
-     * @param ArrayObject $options Options.
+     * @param Cake\Event\Event $event Event.
+     * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $data Query or Entity.
+     * @param \ArrayObject $options Options.
      * @return void
      */
     public function dispatch(Event $event, $data, ArrayObject $options)
