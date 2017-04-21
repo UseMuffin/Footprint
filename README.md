@@ -52,8 +52,8 @@ users table you must set the `$_userModel` property of the trait to same table:
 public function initialize()
 {
     parent::initialize();
-	$this->_userModel = 'YourPlugin.Members';
-    this->loadComponent('Auth', [
+    $this->_userModel = 'YourPlugin.Members';
+    $this->loadComponent('Auth', [
         'authenticate' => [
             'Form' => [
                 'userModel' => $this->_userModel, // Use same Model for Auth
