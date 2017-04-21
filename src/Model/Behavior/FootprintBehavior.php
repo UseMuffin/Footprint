@@ -8,6 +8,7 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
+use InvalidArgumentException;
 use UnexpectedValueException;
 
 class FootprintBehavior extends Behavior
@@ -72,22 +73,23 @@ class FootprintBehavior extends Behavior
      */
     public function implementedEvents()
     {
-        /* map all configured events to a single handler */
-        return array_map(
-            function () {
-                return 'dispatch';
-            },
-            $this->_config['events']
+        // Map all configured events to a single handler
+        return array_fill_keys(
+            array_keys($this->_config['events']),
+            'dispatch'
         );
     }
 
     /**
-     * Dispatch an event to the corresponding function
-     * Called by the event system as instructed by implementedEvents()
-     * @param Cake\Event\Event $event Event.
+     * Dispatch an event to the corresponding function.
+     *
+     * Called by the event manager as per list provided by implementedEvents().
+     *
+     * @param \Cake\Event\Event $event Event.
      * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $data Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
+     * @throws \InvalidArgumentException If method is called with an unsupported event.
      */
     public function dispatch(Event $event, $data, ArrayObject $options)
     {
@@ -100,11 +102,20 @@ class FootprintBehavior extends Behavior
 
         if ($data instanceof EntityInterface) {
             $this->_injectEntity($data, $options, $fields);
-        } elseif ($data instanceof Query) {
-            $this->_injectConditions($data, $options, $fields);
-        } else {
-            throw new \InvalidArgumentException("Event {$eventName} is not supported.");
+
+            return;
         }
+
+        if ($data instanceof Query) {
+            $this->_injectConditions($data, $options, $fields);
+
+            return;
+        }
+
+        throw new InvalidArgumentException(sprintf(
+            'Event "%s" is not supported.',
+            $eventName
+        ));
     }
 
     /**
@@ -151,9 +162,10 @@ class FootprintBehavior extends Behavior
 
         foreach ($fields as $field => $when) {
             if (!in_array($when, ['always', 'new', 'existing'])) {
-                throw new UnexpectedValueException(
-                    sprintf('When should be one of "always", "new" or "existing". The passed value "%s" is invalid', $when)
-                );
+                throw new UnexpectedValueException(sprintf(
+                    'When should be one of "always", "new" or "existing". The passed value "%s" is invalid',
+                    $when
+                ));
             }
 
             if ($entity->dirty($field)) {

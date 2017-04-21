@@ -97,7 +97,7 @@ class FootprintBehaviorTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Event Model.beforeMarshal is not supported.
+     * @expectedExceptionMessage Event "Model.beforeMarshal" is not supported.
      */
     public function testDispatchException()
     {
