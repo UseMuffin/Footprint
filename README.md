@@ -8,7 +8,7 @@
 This plugin allows you to pass the currently logged in user to the model layer of a CakePHP 3
 application.
 
-It comes bundled with the `FootprintBehavior` to allow you control over columns such as `user_id`, 
+It comes bundled with the `FootprintBehavior` to allow you control over columns such as `user_id`,
 `created_by`, `company_id` just like the core's `TimestampBehavior`.
 
 ## Install
@@ -41,22 +41,25 @@ class AppController extends Controller
 ```
 
 This will attach the `Muffin\Footprint\Event\FootprintListener` to models
-which will inject the currently logged in user's instance on `Model.beforeSave` 
+which will inject the currently logged in user's instance on `Model.beforeSave`
 and `Model.beforeFind` in the `_footprint` key of `$options`.
 
-The user record provided by `AuthComponent` is converted to `User` entity before 
-passing to models. If your `AuthComponent` is configured to use a non-default 
+The user record provided by `AuthComponent` is converted to `User` entity before
+passing to models. If your `AuthComponent` is configured to use a non-default
 users table you must set the `$_userModel` property of the trait to same table:
 
 ```php
 public function initialize()
 {
     parent::initialize();
+
+    // Specify the user model if required. Defaults to "Users".
     $this->_userModel = 'YourPlugin.Members';
+
     $this->loadComponent('Auth', [
         'authenticate' => [
             'Form' => [
-                'userModel' => $this->_userModel, // Use same Model for Auth
+                'userModel' => $this->_userModel, // Use same model for AuthComponent
             ],
         ],
     ]);
@@ -89,9 +92,19 @@ $this->addBehavior('Muffin/Footprint.Footprint', [
 ]);
 ```
 
-This will insert the currently logged in user's primary key in `user_id` and `modified_by` fields when creating 
+This will insert the currently logged in user's primary key in `user_id` and `modified_by` fields when creating
 a record, on the `modified_by` field again when updating the record and it will use the associated user record's
 company `id` in the `company_id` field when creating a record.
+
+## Warning
+
+If you have the `FootprintBehavior` attached to a model do not load the model inside
+`Controller::initialize()` method directly or indirectly. If you do so the
+footprint (user entity) won't be set for the model and the behavior won't work
+as expected. You can load your model in `Controller::beforeFilter()` if needed.
+
+This is because the `FootprintListener` which sets the user entity to the models
+is attached after `Controller::initialize()` is run.
 
 ## Patches & Features
 
