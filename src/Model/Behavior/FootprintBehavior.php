@@ -3,9 +3,9 @@ namespace Muffin\Footprint\Model\Behavior;
 
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
-use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use UnexpectedValueException;
@@ -68,22 +68,56 @@ class FootprintBehavior extends Behavior
     }
 
     /**
-     * Injects configured fields into finder conditions.
-     *
-     * @param \Cake\Event\Event $event Event.
-     * @param \Cake\ORM\Query $query Query.
+     * {@inheritDoc}
+     */
+    public function implementedEvents()
+    {
+        /* map all configured events to a single handler */
+        return array_map(
+            function () {
+                return 'dispatch';
+            },
+            $this->_config['events']
+        );
+    }
+
+    /**
+     * Dispatch an event to the corresponding function
+     * Called by the event system as instructed by implementedEvents()
+     * @param Cake\Event\Event $event Event.
+     * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $data Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      */
-    public function beforeFind(Event $event, Query $query, ArrayObject $options)
+    public function dispatch(Event $event, $data, ArrayObject $options)
     {
         $eventName = $event->name();
         if (empty($this->_config['events'][$eventName])) {
             return;
         }
 
-        $config = $this->_config['events'][$eventName];
-        foreach (array_keys($config) as $field) {
+        $fields = $this->_config['events'][$eventName];
+
+        if ($data instanceof EntityInterface) {
+            $this->_injectEntity($data, $options, $fields);
+        } elseif ($data instanceof Query) {
+            $this->_injectConditions($data, $options, $fields);
+        } else {
+            throw new \InvalidArgumentException("Event {$eventName} is not supported.");
+        }
+    }
+
+    /**
+     * Injects configured fields into finder conditions.
+     *
+     * @param \Cake\ORM\Query $query Query.
+     * @param \ArrayObject $options Options.
+     * @param array $fields Field configuration.
+     * @return void
+     */
+    protected function _injectConditions(Query $query, ArrayObject $options, array $fields)
+    {
+        foreach (array_keys($fields) as $field) {
             $path = $this->config('propertiesMap.' . $field);
 
             $check = false;
@@ -106,21 +140,16 @@ class FootprintBehavior extends Behavior
     /**
      * Injects configured field values into entity if those fields are not dirty.
      *
-     * @param \Cake\Event\Event $event Event.
-     * @param \Cake\ORM\Entity $entity Entity.
+     * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @param \ArrayObject $options Options.
+     * @param array $fields Field configuration.
      * @return void
      */
-    public function beforeSave(Event $event, Entity $entity, ArrayObject $options)
+    protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields)
     {
-        $eventName = $event->name();
-        if (empty($this->_config['events'][$eventName])) {
-            return;
-        }
-
         $new = $entity->isNew() !== false;
 
-        foreach ($this->_config['events'][$eventName] as $field => $when) {
+        foreach ($fields as $field => $when) {
             if (!in_array($when, ['always', 'new', 'existing'])) {
                 throw new UnexpectedValueException(
                     sprintf('When should be one of "always", "new" or "existing". The passed value "%s" is invalid', $when)
