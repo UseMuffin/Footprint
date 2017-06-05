@@ -3,6 +3,8 @@ namespace Muffin\Footprint\Auth;
 
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\Network\Request;
+use Cake\Network\Response;
 use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
 
@@ -31,14 +33,31 @@ trait FootprintAwareTrait
     protected $_listener;
 
     /**
+     * Constructor.
+     *
+     * Sets Model.initialize event listener before any model can get initialized (in components, for instance)
+     *
+     * @param \Cake\Network\Request|null $request Request object for this controller. Can be null for testing,
+     *   but expect that features that use the request parameters will not work.
+     * @param \Cake\Network\Response|null $response Response object for this controller.
+     * @param string|null $name Override the name useful in testing when using mocks.
+     * @param \Cake\Event\EventManager|null $eventManager The event manager. Defaults to a new instance.
+     * @param \Cake\Controller\ComponentRegistry|null $components The component registry. Defaults to a new instance.
+     */
+    public function __construct(Request $request = null, Response $response = null, $name = null, $eventManager = null, $components = null)
+    {
+        EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
+
+        parent::__construct($request, $response, $name, $eventManager, $components);
+    }
+
+    /**
      * Events this trait is interested in.
      *
      * @return array
      */
     public function implementedEvents()
     {
-        EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
-
         return parent::implementedEvents() + ['Auth.afterIdentify' => 'footprint'];
     }
 
