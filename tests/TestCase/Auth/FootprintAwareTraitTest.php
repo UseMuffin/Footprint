@@ -19,11 +19,13 @@ class FootprintAwareTraitTest extends TestCase
         $this->controller = new ArticlesController(null, null, null, new EventManager());
 
         $this->controller->loadComponent('Auth');
-        $this->controller->Auth->request->data = [
+
+        $this->controller->Auth->request = $this->controller->Auth->request->withParsedBody([
             'username' => 'mariano',
             'password' => 'cake'
-        ];
-        $this->controller->Auth->config('authenticate', ['Form']);
+        ]);
+
+        $this->controller->Auth->setConfig('authenticate', ['Form']);
 
         $Users = TableRegistry::get('Users');
         $Users->updateAll(['password' => password_hash('cake', PASSWORD_BCRYPT)], []);
@@ -60,7 +62,7 @@ class FootprintAwareTraitTest extends TestCase
 
         $user = $this->controller->getCurrentUserInstance();
         $this->assertInstanceOf('\Cake\ORM\Entity', $user);
-        $this->assertTrue($user->accessible('id'));
+        $this->assertTrue($user->isAccessible('id'));
         $this->assertTrue(isset($user->id));
     }
 
