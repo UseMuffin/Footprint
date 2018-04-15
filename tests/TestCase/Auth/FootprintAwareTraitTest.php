@@ -1,7 +1,6 @@
 <?php
 namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 
-use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\ORM\Table;
@@ -19,11 +18,10 @@ class FootprintAwareTraitTest extends TestCase
         $this->controller = new ArticlesController(null, null, null, new EventManager());
 
         $this->controller->loadComponent('Auth');
-        $this->controller->Auth->request->data = [
-            'username' => 'mariano',
-            'password' => 'cake'
-        ];
-        $this->controller->Auth->config('authenticate', ['Form']);
+        $this->controller->Auth->request = $this->controller->Auth->request
+            ->withData('username', 'mariano')
+            ->withData('password', 'cake');
+        $this->controller->Auth->setConfig('authenticate', ['Form']);
 
         $Users = TableRegistry::get('Users');
         $Users->updateAll(['password' => password_hash('cake', PASSWORD_BCRYPT)], []);
@@ -37,7 +35,7 @@ class FootprintAwareTraitTest extends TestCase
             'Controller.beforeRender' => 'beforeRender',
             'Controller.beforeRedirect' => 'beforeRedirect',
             'Controller.shutdown' => 'afterFilter',
-            'Auth.afterIdentify' => 'footprint'
+            'Auth.afterIdentify' => 'footprint',
         ];
         $this->assertEquals($expected, $result);
 
@@ -60,7 +58,7 @@ class FootprintAwareTraitTest extends TestCase
 
         $user = $this->controller->getCurrentUserInstance();
         $this->assertInstanceOf('\Cake\ORM\Entity', $user);
-        $this->assertTrue($user->accessible('id'));
+        $this->assertTrue($user->isAccessible('id'));
         $this->assertTrue(isset($user->id));
     }
 

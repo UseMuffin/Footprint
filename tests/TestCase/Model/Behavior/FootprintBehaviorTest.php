@@ -29,7 +29,7 @@ class FootprintBehaviorTest extends TestCase
         $this->Table = $table;
         $this->footprint = new Entity([
             'id' => 2,
-            'company' => new Entity(['id' => 5])
+            'company' => new Entity(['id' => 5]),
         ]);
     }
 
@@ -47,7 +47,7 @@ class FootprintBehaviorTest extends TestCase
         $this->assertSame($expected, $entity->extract(['id', 'title', 'created_by', 'modified_by']));
 
         $footprint = new Entity([
-            'id' => 3
+            'id' => 3,
         ]);
         $entity->title = 'new title';
         $entity = $this->Table->save($entity, ['_footprint' => $footprint]);
@@ -58,7 +58,7 @@ class FootprintBehaviorTest extends TestCase
     public function testFind()
     {
         $result = $this->Table->find('all', ['_footprint' => $this->footprint])
-            ->hydrate(false)
+            ->enableHydration(false)
             ->first();
 
         $expected = ['id' => 3, 'title' => 'article 3', 'created_by' => 2, 'modified_by' => 1];
@@ -68,7 +68,7 @@ class FootprintBehaviorTest extends TestCase
         // "Articles.created_by" is already set in condition.
         $result = $this->Table->find('all', ['_footprint' => $this->footprint])
             ->where(['Articles.created_by' => 1])
-            ->hydrate(false)
+            ->enableHydration(false)
             ->first();
 
         $expected = ['id' => 1, 'title' => 'article 1', 'created_by' => 1, 'modified_by' => 1];
@@ -83,12 +83,12 @@ class FootprintBehaviorTest extends TestCase
      */
     public function testInjectEntityException()
     {
-        $this->Table->behaviors()->Footprint->config(
+        $this->Table->behaviors()->Footprint->setConfig(
             'events',
             [
                 'Model.beforeSave' => [
-                    'created_by' => 'invalid'
-                ]
+                    'created_by' => 'invalid',
+                ],
             ]
         );
         $entity = new Entity(['title' => 'new article']);
@@ -102,8 +102,8 @@ class FootprintBehaviorTest extends TestCase
     public function testDispatchException()
     {
         $behavior = $this->Table->behaviors()->Footprint;
-        $behavior->config('events', ['Model.beforeMarshal' => ['modified_by']]);
-        $this->Table->eventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
+        $behavior->setConfig('events', ['Model.beforeMarshal' => ['modified_by']]);
+        $this->Table->getEventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
         $entity = $this->Table->newEntity([]);
     }
 }

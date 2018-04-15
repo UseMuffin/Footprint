@@ -41,7 +41,7 @@ class FootprintListener implements EventListenerInterface
      */
     public function __construct(Entity $user = null, array $config = [])
     {
-        $this->config($config);
+        $this->setConfig($config);
         $this->_currentUser = $user;
     }
 
@@ -54,7 +54,7 @@ class FootprintListener implements EventListenerInterface
             $callable = 'handleEvent';
 
             return compact('callable', 'priority');
-        }, $this->config('events'));
+        }, $this->getConfig('events'));
     }
 
     /**
@@ -78,7 +78,7 @@ class FootprintListener implements EventListenerInterface
      */
     public function handleEvent(Event $event, $ormObject, $options)
     {
-        $key = $this->config('optionKey');
+        $key = $this->getConfig('optionKey');
         if (empty($options[$key]) && !empty($this->_currentUser)) {
             $options[$key] = $this->_currentUser;
         }
