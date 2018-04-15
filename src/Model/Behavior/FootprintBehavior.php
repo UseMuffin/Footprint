@@ -24,11 +24,11 @@ class FootprintBehavior extends Behavior
             'Model.beforeSave' => [
                 'created_by' => 'new',
                 'modified_by' => 'always',
-            ]
+            ],
         ],
         'optionKey' => '_footprint',
         'primaryKey' => 'id',
-        'propertiesMap' => []
+        'propertiesMap' => [],
     ];
 
     /**
@@ -37,10 +37,10 @@ class FootprintBehavior extends Behavior
     public function initialize(array $config)
     {
         if (isset($config['events'])) {
-            $this->config('events', $config['events'], false);
+            $this->setConfig('events', $config['events'], false);
         }
 
-        $config = $this->config();
+        $config = $this->getConfig();
 
         foreach ($config['events'] as $name => $options) {
             $options = Hash::normalize((array)$options);
@@ -65,7 +65,7 @@ class FootprintBehavior extends Behavior
             }
         }
 
-        $this->config('propertiesMap', $config['propertiesMap'], false);
+        $this->setConfig('propertiesMap', $config['propertiesMap'], false);
     }
 
     /**
@@ -93,7 +93,7 @@ class FootprintBehavior extends Behavior
      */
     public function dispatch(Event $event, $data, ArrayObject $options)
     {
-        $eventName = $event->name();
+        $eventName = $event->getName();
         if (empty($this->_config['events'][$eventName])) {
             return;
         }
@@ -129,7 +129,7 @@ class FootprintBehavior extends Behavior
     protected function _injectConditions(Query $query, ArrayObject $options, array $fields)
     {
         foreach (array_keys($fields) as $field) {
-            $path = $this->config('propertiesMap.' . $field);
+            $path = $this->getConfig('propertiesMap.' . $field);
 
             $check = false;
             $query->traverseExpressions(function ($expression) use (&$check, $field, $query) {
@@ -139,7 +139,10 @@ class FootprintBehavior extends Behavior
                     return;
                 }
                 $alias = $this->_table->aliasField($field);
-                !$check && $check = preg_match('/^' . $alias . '/', $expression->sql($query->valueBinder()));
+                !$check && $check = preg_match(
+                    '/^' . $alias . '/',
+                    $expression->sql($query->getValueBinder())
+                );
             });
 
             if (!$check && $value = Hash::get((array)$options, $path)) {
@@ -168,7 +171,7 @@ class FootprintBehavior extends Behavior
                 ));
             }
 
-            if ($entity->dirty($field)) {
+            if ($entity->isDirty($field)) {
                 continue;
             }
 
@@ -178,7 +181,10 @@ class FootprintBehavior extends Behavior
             ) {
                 $entity->set(
                     $field,
-                    current(Hash::extract((array)$options, $this->config('propertiesMap.' . $field)))
+                    current(Hash::extract(
+                        (array)$options,
+                        $this->getConfig('propertiesMap.' . $field)
+                    ))
                 );
             }
         }

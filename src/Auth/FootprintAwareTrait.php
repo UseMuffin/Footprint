@@ -57,13 +57,13 @@ trait FootprintAwareTrait
             $this->_listener = new FootprintListener($this->_getCurrentUser());
         }
 
-        if ($event->name() === 'Auth.afterIdentify') {
-            $this->_listener->setUser($this->_getCurrentUser($event->data[0]));
+        if ($event->getName() === 'Auth.afterIdentify') {
+            $this->_listener->setUser($this->_getCurrentUser($event->getData(0)));
 
             return;
         }
 
-        $event->subject()->eventManager()->attach($this->_listener);
+        $event->getSubject()->getEventManager()->on($this->_listener);
     }
 
     /**
@@ -161,7 +161,7 @@ trait FootprintAwareTrait
      */
     protected function _checkUserInstanceOf($user)
     {
-        $entityClass = $this->_circumventEventManager('entityClass');
+        $entityClass = $this->_circumventEventManager('getEntityClass');
 
         return $user instanceof $entityClass;
     }
