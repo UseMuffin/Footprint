@@ -68,7 +68,7 @@ public function initialize()
 
 #### Using Footprint with cakephp/authentication
 
-If you are using the `cakephp/authentication` component instead of the `AuthComponent`, you will need to update your controller to tell Footprint where to find the identity. To do so, update the trait declaration and overwride `_setCurrentUser` to get the identity from the request:
+If you are using the `cakephp/authentication` plugin instead of the `AuthComponent`, you will need to update your controller to tell Footprint where to find the identity. To do so, update the trait declaration and overwride `_setCurrentUser` to get the identity from the request:
 
 ```
 use Muffin\Footprint\Auth\FootprintAwareTrait;
