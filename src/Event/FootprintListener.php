@@ -1,7 +1,6 @@
 <?php
 namespace Muffin\Footprint\Event;
 
-use ArrayObject;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
