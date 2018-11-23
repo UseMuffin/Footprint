@@ -181,10 +181,10 @@ class FootprintBehavior extends Behavior
             ) {
                 $entity->set(
                     $field,
-                    current(Hash::extract(
+                    Hash::get(
                         (array)$options,
                         $this->getConfig('propertiesMap.' . $field)
-                    ))
+                    )
                 );
             }
         }

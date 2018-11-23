@@ -53,6 +53,11 @@ class FootprintBehaviorTest extends TestCase
         $entity = $this->Table->save($entity, ['_footprint' => $footprint]);
         $expected = ['id' => $entity->id, 'title' => 'new title', 'created_by' => 2, 'modified_by' => 3];
         $this->assertSame($expected, $entity->extract(['id', 'title', 'created_by', 'modified_by']));
+
+        $entity = new Entity(['title' => 'without footprint']);
+        $entity = $this->Table->save($entity);
+        $expected = ['id' => $entity->id, 'title' => 'without footprint', 'created_by' => null, 'modified_by' => null];
+        $this->assertSame($expected, $entity->extract(['id', 'title', 'created_by', 'modified_by']));
     }
 
     public function testFind()
