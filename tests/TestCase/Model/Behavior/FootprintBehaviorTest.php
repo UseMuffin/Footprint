@@ -21,8 +21,12 @@ class FootprintBehaviorTest extends TestCase
                 'Model.beforeSave' => [
                     'created_by' => 'new',
                     'modified_by' => 'always',
+                    'company_id' => 'always',
                 ],
                 'Model.beforeFind' => 'created_by',
+            ],
+            'propertiesMap' => [
+                'company_id' => '_footprint.company.id',
             ],
         ]);
 
@@ -43,8 +47,17 @@ class FootprintBehaviorTest extends TestCase
     {
         $entity = new Entity(['title' => 'new article']);
         $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
-        $expected = ['id' => $entity->id, 'title' => 'new article', 'created_by' => 2, 'modified_by' => 2];
-        $this->assertSame($expected, $entity->extract(['id', 'title', 'created_by', 'modified_by']));
+        $expected = [
+            'id' => $entity->id,
+            'title' => 'new article',
+            'created_by' => 2,
+            'modified_by' => 2,
+            'company_id' => 5,
+        ];
+        $this->assertSame(
+            $expected,
+            $entity->extract(['id', 'title', 'created_by', 'modified_by', 'company_id'])
+        );
 
         $footprint = new Entity([
             'id' => 3,
