@@ -179,12 +179,14 @@ class FootprintBehavior extends Behavior
                 ($when === 'new' && $new) ||
                 ($when === 'existing' && !$new)
             ) {
+                $value = current(Hash::extract(
+                    (array)$options,
+                    $this->getConfig('propertiesMap.' . $field)
+                ));
+
                 $entity->set(
                     $field,
-                    current(Hash::extract(
-                        (array)$options,
-                        $this->getConfig('propertiesMap.' . $field)
-                    ))
+                    $value !== false ? $value : null
                 );
             }
         }
