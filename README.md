@@ -82,7 +82,7 @@ class AppController extends Controller
     protected function _setCurrentUser($user = null)
     {
         if (!$user) {
-            $user = $this->request->getAttribute('identity');
+            $user = $this->request->getAttribute('identity')->getOriginalData();
         }
 
         return $this->_footprintSetCurrentUser($user);
