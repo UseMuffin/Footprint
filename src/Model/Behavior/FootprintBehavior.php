@@ -6,7 +6,7 @@ namespace Muffin\Footprint\Model\Behavior;
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
@@ -86,13 +86,13 @@ class FootprintBehavior extends Behavior
      *
      * Called by the event manager as per list provided by implementedEvents().
      *
-     * @param \Cake\Event\Event $event Event.
+     * @param \Cake\Event\EventInterface $event Event.
      * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $data Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      * @throws \InvalidArgumentException If method is called with an unsupported event.
      */
-    public function dispatch(Event $event, $data, ArrayObject $options)
+    public function dispatch(EventInterface $event, $data, ArrayObject $options): void
     {
         $eventName = $event->getName();
         if (empty($this->_config['events'][$eventName])) {
@@ -127,7 +127,7 @@ class FootprintBehavior extends Behavior
      * @param array $fields Field configuration.
      * @return void
      */
-    protected function _injectConditions(Query $query, ArrayObject $options, array $fields)
+    protected function _injectConditions(Query $query, ArrayObject $options, array $fields): void
     {
         foreach (array_keys($fields) as $field) {
             $path = $this->getConfig('propertiesMap.' . $field);
@@ -161,7 +161,7 @@ class FootprintBehavior extends Behavior
      * @param array $fields Field configuration.
      * @return void
      */
-    protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields)
+    protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields): void
     {
         $new = $entity->isNew() !== false;
 

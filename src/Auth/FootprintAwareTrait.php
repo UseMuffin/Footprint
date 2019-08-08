@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Muffin\Footprint\Auth;
 
+use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
@@ -20,7 +21,7 @@ trait FootprintAwareTrait
     /**
      * Instance of currently logged in user.
      *
-     * @var \Cake\ORM\Entity
+     * @var \Cake\Datasource\EntityInterface
      */
     protected $_currentUserInstance;
 
@@ -72,8 +73,8 @@ trait FootprintAwareTrait
      * Returns an instance of the current authenticated user. If a `$user`
      * is provided, will overwrite the current logged in user instance.
      *
-     * @param \Cake\ORM\Entity|array $user User.
-     * @return \Cake\ORM\Entity
+     * @param \Cake\Datasource\EntityInterface|array $user User.
+     * @return \Cake\Datasource\EntityInterface
      */
     protected function _getCurrentUser($user = null)
     {
@@ -93,8 +94,8 @@ trait FootprintAwareTrait
      * Sets the current logged in user to `$user`. If none provided,
      * fallsback to `Cake\Controller\Component\AuthComponent::user()`.
      *
-     * @param \Cake\ORM\Entity|array $user User.
-     * @return \Cake\ORM\Entity|bool
+     * @param \Cake\Datasource\EntityInterface|array $user User.
+     * @return \Cake\Datasource\EntityInterface|bool
      */
     protected function _setCurrentUser($user = null)
     {
@@ -114,8 +115,8 @@ trait FootprintAwareTrait
     /**
      * Creates instance of `$user`.
      *
-     * @param \Cake\ORM\Entity|array $user User.
-     * @return \Cake\ORM\Entity
+     * @param \Cake\Datasource\EntityInterface|array $user User.
+     * @return \Cake\Datasource\EntityInterface
      */
     protected function _getUserInstance($user)
     {
@@ -146,10 +147,10 @@ trait FootprintAwareTrait
     /**
      * Get user entity from data array.
      *
-     * @param array $user User data
-     * @return \Cake\ORM\Entity
+     * @param array|\Cake\Datasource\EntityInterface $user User data
+     * @return \Cake\Datasource\EntityInterface
      */
-    protected function _getUserInstanceFromArray($user)
+    protected function _getUserInstanceFromArray($user): EntityInterface
     {
         $options = ['accessibleFields' => ['*' => true], 'validate' => false];
 
@@ -159,10 +160,10 @@ trait FootprintAwareTrait
     /**
      * Check given object is of user entity type.
      *
-     * @param \Cake\ORM\Entity $user User entity.
+     * @param \Cake\Datasource\EntityInterface|array $user User entity.
      * @return bool
      */
-    protected function _checkUserInstanceOf($user)
+    protected function _checkUserInstanceOf($user): bool
     {
         $entityClass = $this->_circumventEventManager('getEntityClass');
 
