@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 
 use Cake\Event\Event;
@@ -10,7 +12,6 @@ use TestApp\Controller\ArticlesController;
 
 class FootprintAwareTraitTest extends TestCase
 {
-
     public $fixtures = ['core.Users', 'plugin.Muffin/Footprint.Articles'];
 
     public function setUp(): void

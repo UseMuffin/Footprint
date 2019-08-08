@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Test\TestCase\Event\Listener;
 
 use Cake\Event\Event;

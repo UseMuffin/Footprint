@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Model\Behavior;
 
 use ArrayObject;
@@ -13,7 +15,6 @@ use UnexpectedValueException;
 
 class FootprintBehavior extends Behavior
 {
-
     /**
      * Default config.
      *
@@ -145,7 +146,8 @@ class FootprintBehavior extends Behavior
                 );
             });
 
-            if (!$check && $value = Hash::get((array)$options, $path)) {
+            $value = Hash::get((array)$options, $path);
+            if (!$check && $value) {
                 $query->where([$this->_table->aliasField($field) => $value]);
             }
         }

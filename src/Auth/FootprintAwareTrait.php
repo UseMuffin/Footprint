@@ -1,14 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Auth;
 
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
 
 trait FootprintAwareTrait
 {
-
     /**
      * User model.
      *
@@ -48,17 +49,18 @@ trait FootprintAwareTrait
      * It also passing the user record to footprint listener after user is
      * identified by AuthComponent.
      *
-     * @param \Cake\Event\Event $event Event.
+     * @param \Cake\Event\EventInterface $event Event.
      * @return void
      */
-    public function footprint(Event $event)
+    public function footprint(EventInterface $event)
     {
         if (!$this->_listener) {
             $this->_listener = new FootprintListener($this->_getCurrentUser());
         }
 
         if ($event->getName() === 'Auth.afterIdentify') {
-            $this->_listener->setUser($this->_getCurrentUser($event->getData(0)));
+            $data = $event->getData();
+            $this->_listener->setUser($this->_getCurrentUser($data[0]));
 
             return;
         }

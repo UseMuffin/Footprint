@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Event;
 
 use Cake\Core\InstanceConfigTrait;
@@ -38,7 +40,7 @@ class FootprintListener implements EventListenerInterface
      * @param \Cake\ORM\Entity $user User entity.
      * @param array $config Configuration list.
      */
-    public function __construct(Entity $user = null, array $config = [])
+    public function __construct(?Entity $user = null, array $config = [])
     {
         $this->setConfig($config);
         $this->_currentUser = $user;
