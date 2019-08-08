@@ -35,7 +35,7 @@ trait FootprintAwareTrait
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
 

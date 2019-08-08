@@ -34,7 +34,7 @@ class FootprintBehavior extends Behavior
     /**
      * {@inheritDoc}
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (isset($config['events'])) {
             $this->setConfig('events', $config['events'], false);
@@ -71,7 +71,7 @@ class FootprintBehavior extends Behavior
     /**
      * {@inheritDoc}
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         // Map all configured events to a single handler
         return array_fill_keys(

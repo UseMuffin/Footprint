@@ -13,14 +13,14 @@ class FootprintAwareTraitTest extends TestCase
 
     public $fixtures = ['core.Users', 'plugin.Muffin/Footprint.Articles'];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->controller = new ArticlesController(null, null, null, new EventManager());
 
         $this->controller->loadComponent('Auth');
-        $this->controller->Auth->request = $this->controller->Auth->request
+        $this->controller->setRequest($this->controller->getRequest()
             ->withData('username', 'mariano')
-            ->withData('password', 'cake');
+            ->withData('password', 'cake'));
         $this->controller->Auth->setConfig('authenticate', ['Form']);
 
         $Users = TableRegistry::get('Users');

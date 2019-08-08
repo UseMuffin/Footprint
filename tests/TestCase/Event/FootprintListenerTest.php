@@ -8,7 +8,7 @@ use Muffin\Footprint\Event\FootprintListener;
 
 class FootprintListenerTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->listener = new FootprintListener();
     }

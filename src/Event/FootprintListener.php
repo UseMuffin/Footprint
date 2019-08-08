@@ -47,7 +47,7 @@ class FootprintListener implements EventListenerInterface
     /**
      * {@inheritDoc}
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return array_map(function ($priority) {
             $callable = 'handleEvent';

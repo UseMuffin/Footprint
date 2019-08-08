@@ -11,7 +11,7 @@ class FootprintBehaviorTest extends TestCase
         'plugin.Muffin/Footprint.Articles',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ class FootprintBehaviorTest extends TestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         TableRegistry::clear();
@@ -93,14 +93,11 @@ class FootprintBehaviorTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage When should be one of "always", "new" or "existing". The passed value "invalid" is invalid
-     *
-     * @return void
-     */
     public function testInjectEntityException()
     {
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('When should be one of "always", "new" or "existing". The passed value "invalid" is invalid');
+
         $this->Table->behaviors()->Footprint->setConfig(
             'events',
             [
@@ -113,12 +110,11 @@ class FootprintBehaviorTest extends TestCase
         $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Event "Model.beforeMarshal" is not supported.
-     */
     public function testDispatchException()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Event "Model.beforeMarshal" is not supported.');
+
         $behavior = $this->Table->behaviors()->Footprint;
         $behavior->setConfig('events', ['Model.beforeMarshal' => ['modified_by']]);
         $this->Table->getEventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
