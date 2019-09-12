@@ -19,7 +19,7 @@ Using [Composer][composer]:
 composer require muffin/footprint
 ```
 
-You then need to load the plugin. In `boostrap.php`, something like:
+You then need to load the plugin. In `bootstrap.php`, something like:
 
 ```php
 \Cake\Core\Plugin::load('Muffin/Footprint');
