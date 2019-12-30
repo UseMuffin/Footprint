@@ -30,10 +30,10 @@
         "source": "https://github.com/usemuffin/footprint"
     },
     "require": {
-        "cakephp/cakephp": "4.x-dev"
+        "cakephp/cakephp": "^4.0.1"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "dev-next",
+        "cakephp/cakephp-codesniffer": "^4.0",
         "phpunit/phpunit": "^8.3"
     },
     "autoload": {
