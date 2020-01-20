@@ -25,7 +25,7 @@ matrix:
       env: PREFER_LOWEST=1
 
 before_script:
-  - phpenv config-rm xdebug.ini
+  - if [[ $DEFAULT == 1 && $TRAVIS_PHP_VERSION != 7.2 ]]; then phpenv config-rm xdebug.ini; fi
 
   - if [[ $PREFER_LOWEST != 1 ]]; then composer install --no-interaction; fi
   - if [[ $PREFER_LOWEST = 1 ]]; then composer update --no-interaction --prefer-lowest --prefer-stable; fi
