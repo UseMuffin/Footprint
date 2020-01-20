@@ -177,7 +177,8 @@ class FootprintBehavior extends Behavior
                 continue;
             }
 
-            if ($when === 'always' ||
+            if (
+                $when === 'always' ||
                 ($when === 'new' && $new) ||
                 ($when === 'existing' && !$new)
             ) {
