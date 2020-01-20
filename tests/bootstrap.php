@@ -28,5 +28,3 @@ if (file_exists($root . '/config/bootstrap.php')) {
 }
 
 require $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
-
-\Cake\Core\Plugin::load('Muffin/Footprint', ['path' => dirname(dirname(__FILE__)) . DS]);
