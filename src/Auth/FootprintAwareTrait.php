@@ -103,6 +103,13 @@ trait FootprintAwareTrait
             $user = $this->Auth->user();
         }
 
+        if ($user === null && !empty($this->Authentication)) {
+            $identity = $this->Authentication->getIdentity();
+            if ($identity) {
+                $user = $identity->getData();
+            }
+        }
+
         if (!$user) {
             return null;
         }
