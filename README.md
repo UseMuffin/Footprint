@@ -19,10 +19,10 @@ Using [Composer][composer]:
 composer require muffin/footprint
 ```
 
-You then need to load the plugin. In `bootstrap.php`, something like:
+You then need to load the plugin by running console command:
 
-```php
-\Cake\Core\Plugin::load('Muffin/Footprint');
+```bash
+bin/cake load Muffin/Footprint
 ```
 
 ## Usage
@@ -70,7 +70,7 @@ public function initialize()
 
 If you are using the `cakephp/authentication` plugin instead of the `AuthComponent`, you will need to update your controller to tell Footprint where to find the identity. To do so, update the trait declaration and overwride `_setCurrentUser` to get the identity from the request:
 
-```
+```php
 use Muffin\Footprint\Auth\FootprintAwareTrait;
 
 class AppController extends Controller
@@ -149,7 +149,7 @@ This was originally inspired by [Ceeram/Blame].
 
 ## License
 
-Copyright (c) 2015, [Use Muffin][muffin] and licensed under [The MIT License][mit].
+Copyright (c) 2015-Present, [Use Muffin][muffin] and licensed under [The MIT License][mit].
 
 [cakephp]:http://cakephp.org
 [composer]:http://getcomposer.org
