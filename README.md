@@ -5,8 +5,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/muffin/footprint.svg?style=flat-square)](https://packagist.org/packages/muffin/footprint)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-This plugin allows you to pass the currently logged in user to the model layer of a CakePHP 3
-application.
+This plugin allows you to pass the currently logged in user to the model layer of a CakePHP application.
 
 It comes bundled with the `FootprintBehavior` to allow you control over columns such as `user_id`,
 `created_by`, `company_id` just like the core's `TimestampBehavior`.
@@ -142,10 +141,6 @@ their own that I can ignore when I pull)
 ## Bugs & Feedback
 
 http://github.com/usemuffin/footprint/issues
-
-## Credits
-
-This was originally inspired by [Ceeram/Blame].
 
 ## License
 
