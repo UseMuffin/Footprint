@@ -80,7 +80,7 @@ class AppController extends Controller
 
     protected function _setCurrentUser($user = null)
     {
-        if (!$user) {
+        if (!$user && $this->request->getAttribute('identity')) {
             $user = $this->request->getAttribute('identity')->getOriginalData();
         }
 
