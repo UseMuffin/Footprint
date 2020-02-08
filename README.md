@@ -17,12 +17,13 @@ Using [Composer][composer]:
 
 ```
 composer require muffin/footprint
+
 ```
 
 You then need to load the plugin by running console command:
 
 ```bash
-bin/cake load Muffin/Footprint
+bin/cake plugin load Muffin/Footprint 
 ```
 
 ## Usage
