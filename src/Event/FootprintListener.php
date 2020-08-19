@@ -47,7 +47,7 @@ class FootprintListener implements EventListenerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {
