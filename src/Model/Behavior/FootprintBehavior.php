@@ -33,7 +33,7 @@ class FootprintBehavior extends Behavior
     ];
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function initialize(array $config): void
     {
@@ -70,7 +70,7 @@ class FootprintBehavior extends Behavior
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {
