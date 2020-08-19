@@ -1,16 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Muffin\Footprint;
 
 use Cake\Core\BasePlugin;
-use Cake\Routing\RouteBuilder;
 
 /**
  * Plugin for Expose
  */
 class Plugin extends BasePlugin
 {
-
     /**
      * @var bool
      */
