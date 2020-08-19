@@ -120,6 +120,6 @@ class FootprintBehaviorTest extends TestCase
         $behavior = $this->Table->behaviors()->Footprint;
         $behavior->setConfig('events', ['Model.beforeMarshal' => ['modified_by']]);
         $this->Table->getEventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
-        $entity = $this->Table->newEntity([]);
+        $this->Table->newEntity([]);
     }
 }
