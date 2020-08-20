@@ -8,6 +8,7 @@ use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
+use RuntimeException;
 
 trait FootprintAwareTrait
 {
@@ -99,14 +100,18 @@ trait FootprintAwareTrait
      */
     protected function _setCurrentUser($user = null): ?EntityInterface
     {
-        if ($user === null && !empty($this->Auth)) {
-            $user = $this->Auth->user();
-        }
-
-        if ($user === null && !empty($this->Authentication)) {
-            $identity = $this->Authentication->getIdentity();
-            if ($identity) {
-                $user = $identity->getOriginalData();
+        if ($user === null) {
+            if ($this->components()->has('Authentication')) {
+                $identity = $this->Authentication->getIdentity();
+                if ($identity) {
+                    $user = $identity->getOriginalData();
+                }
+            } elseif ($this->components()->has('Auth')) {
+                $user = $this->Auth->user();
+            } else {
+                throw new RuntimeException(
+                    'You must have AuthenticationComponent or AuthComponent loaded to use Footprint'
+                );
             }
         }
 
