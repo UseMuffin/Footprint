@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 class FootprintBehaviorTest extends TestCase
@@ -17,7 +16,7 @@ class FootprintBehaviorTest extends TestCase
     {
         parent::setUp();
 
-        $table = TableRegistry::get('Muffin/Footprint.Articles');
+        $table = $this->getTableLocator()->get('Muffin/Footprint.Articles');
         $table->addBehavior('Muffin/Footprint.Footprint', [
             'events' => [
                 'Model.beforeSave' => [
@@ -42,7 +41,7 @@ class FootprintBehaviorTest extends TestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        TableRegistry::clear();
+        $this->getTableLocator()->clear();
     }
 
     public function testSave()

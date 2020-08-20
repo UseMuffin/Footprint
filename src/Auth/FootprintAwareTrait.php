@@ -6,7 +6,6 @@ namespace Muffin\Footprint\Auth;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
-use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
 use RuntimeException;
 
@@ -151,7 +150,7 @@ trait FootprintAwareTrait
     {
         EventManager::instance()->off('Model.initialize', [$this, 'footprint']);
         $result = call_user_func_array(
-            [TableRegistry::getTableLocator()->get($this->_userModel), $method],
+            [$this->getTableLocator()->get($this->_userModel), $method],
             $args
         );
         EventManager::instance()->on('Model.initialize', [$this, 'footprint']);

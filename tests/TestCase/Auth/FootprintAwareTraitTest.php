@@ -7,7 +7,6 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use TestApp\Controller\ArticlesController;
 
@@ -25,7 +24,7 @@ class FootprintAwareTraitTest extends TestCase
             ->withData('password', 'cake'));
         $this->controller->Auth->setConfig('authenticate', ['Form']);
 
-        $Users = TableRegistry::getTableLocator()->get('Users');
+        $Users = $this->getTableLocator()->get('Users');
         $Users->updateAll(['password' => password_hash('cake', PASSWORD_BCRYPT)], []);
     }
 
