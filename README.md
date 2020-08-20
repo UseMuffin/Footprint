@@ -5,10 +5,11 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/muffin/footprint.svg?style=flat-square)](https://packagist.org/packages/muffin/footprint)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-This plugin allows you to pass the currently logged in user to the model layer of a CakePHP application.
+This plugin allows you to pass the currently logged in user info to the model layer
+of a CakePHP application.
 
-It comes bundled with the `FootprintBehavior` to allow you control over columns such as `user_id`,
-`created_by`, `company_id` just like the core's `TimestampBehavior`.
+It comes bundled with the `FootprintBehavior` to allow you control over columns
+such as `user_id`, `created_by`, `company_id` similar to the core's `TimestampBehavior`.
 
 ## Install
 
@@ -28,7 +29,8 @@ bin/cake plugin load Muffin/Footprint
 
 ### Trait
 
-First, you will need to include the `Muffin\Footprint\Auth\FootprintAwareTrait` to your `AppController`:
+First, you will need to include the `Muffin\Footprint\Auth\FootprintAwareTrait`
+to your `AppController`:
 
 ```php
 use Muffin\Footprint\Auth\FootprintAwareTrait;
@@ -36,6 +38,9 @@ use Muffin\Footprint\Auth\FootprintAwareTrait;
 class AppController extends Controller
 {
     use FootprintAwareTrait;
+
+    // Specify the user model if required. Defaults to "Users".
+    $this->_userModel = 'YourPlugin.Members';
 }
 ```
 
@@ -43,56 +48,14 @@ This will attach the `Muffin\Footprint\Event\FootprintListener` to models
 which will inject the currently logged in user's instance on `Model.beforeSave`
 and `Model.beforeFind` in the `_footprint` key of `$options`.
 
-The user record provided by `AuthComponent` is converted to `User` entity before
-passing to models. If your `AuthComponent` is configured to use a non-default
-users table you must set the `$_userModel` property of the trait to same table:
-
-```php
-public function initialize()
-{
-    parent::initialize();
-
-    // Specify the user model if required. Defaults to "Users".
-    $this->_userModel = 'YourPlugin.Members';
-
-    $this->loadComponent('Auth', [
-        'authenticate' => [
-            'Form' => [
-                'userModel' => $this->_userModel, // Use same model for AuthComponent
-            ],
-        ],
-    ]);
-}
-```
-
-#### Using Footprint with cakephp/authentication
-
-If you are using the `cakephp/authentication` plugin instead of the `AuthComponent`, you will need to update your controller to tell Footprint where to find the identity. To do so, update the trait declaration and overwride `_setCurrentUser` to get the identity from the request:
-
-```php
-use Muffin\Footprint\Auth\FootprintAwareTrait;
-
-class AppController extends Controller
-{
-    use FootprintAwareTrait {
-        _setCurrentUser as _footprintSetCurrentUser;
-    }
-
-    protected function _setCurrentUser($user = null)
-    {
-        if (!$user && $this->request->getAttribute('identity')) {
-            $user = $this->request->getAttribute('identity')->getOriginalData();
-        }
-
-        return $this->_footprintSetCurrentUser($user);
-    }
-}
-```
+Your controller needs to have either `cakephp/authentication` plugin's `AuthenticationComponent`
+or CakePHP core's deprecated `AuthComponent` loaded so that the user identity
+can be fetched.
 
 ### Behavior
 
-To use the included behavior to automatically update the `created_by` and `modified_by` fields of a record for example,
-add the following to your table's `initialize()` method:
+To use the included behavior to automatically update the `created_by` and `modified_by`
+fields of a record for example, add the following to your table's `initialize()` method:
 
 ```php
 $this->addBehavior('Muffin/Footprint.Footprint');
@@ -115,9 +78,10 @@ $this->addBehavior('Muffin/Footprint.Footprint', [
 ]);
 ```
 
-This will insert the currently logged in user's primary key in `user_id` and `modified_by` fields when creating
-a record, on the `modified_by` field again when updating the record and it will use the associated user record's
-company `id` in the `company_id` field when creating a record.
+This will insert the currently logged in user's primary key in `user_id` and `modified_by`
+fields when creating a record, on the `modified_by` field again when updating
+the record and it will use the associated user record's company `id` in the
+`company_id` field when creating a record.
 
 ## Warning
 
@@ -134,8 +98,8 @@ is attached after `Controller::initialize()` is run.
 * Fork
 * Mod, fix
 * Test - this is important, so it's not unintentionally broken
-* Commit - do not mess with license, todo, version, etc. (if you do change any, bump them into commits of
-their own that I can ignore when I pull)
+* Commit - do not mess with license, todo, version, etc. (if you do change any,
+  bump them into commits of their own that I can ignore when I pull)
 * Pull request - bonus point for topic branches
 
 ## Bugs & Feedback
