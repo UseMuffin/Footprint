@@ -9,7 +9,7 @@ use Cake\TestSuite\TestCase;
 
 class FootprintBehaviorTest extends TestCase
 {
-    public $fixtures = [
+    protected $fixtures = [
         'plugin.Muffin/Footprint.Articles',
     ];
 

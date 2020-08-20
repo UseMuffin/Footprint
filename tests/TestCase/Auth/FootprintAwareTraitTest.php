@@ -13,7 +13,7 @@ use TestApp\Controller\ArticlesController;
 
 class FootprintAwareTraitTest extends TestCase
 {
-    public $fixtures = ['core.Users', 'plugin.Muffin/Footprint.Articles'];
+    protected $fixtures = ['core.Users', 'plugin.Muffin/Footprint.Articles'];
 
     public function setUp(): void
     {
