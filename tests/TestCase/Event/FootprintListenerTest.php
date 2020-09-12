@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Test\TestCase\Event\Listener;
 
 use Cake\Event\Event;
@@ -8,7 +10,7 @@ use Muffin\Footprint\Event\FootprintListener;
 
 class FootprintListenerTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->listener = new FootprintListener();
     }

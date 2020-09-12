@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Event;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Entity;
 
 class FootprintListener implements EventListenerInterface
 {
@@ -28,26 +30,26 @@ class FootprintListener implements EventListenerInterface
     /**
      * Instance of currently logged in user.
      *
-     * @var \Cake\ORM\Entity
+     * @var \Cake\Datasource\EntityInterface
      */
     protected $_currentUser;
 
     /**
      * Constructor.
      *
-     * @param \Cake\ORM\Entity $user User entity.
+     * @param \Cake\Datasource\EntityInterface $user User entity.
      * @param array $config Configuration list.
      */
-    public function __construct(Entity $user = null, array $config = [])
+    public function __construct(?EntityInterface $user = null, array $config = [])
     {
         $this->setConfig($config);
         $this->_currentUser = $user;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return array_map(function ($priority) {
             $callable = 'handleEvent';
@@ -59,10 +61,10 @@ class FootprintListener implements EventListenerInterface
     /**
      * Set current user entity.
      *
-     * @param \Cake\ORM\Entity $entity Entity.
+     * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @return void
      */
-    public function setUser(Entity $entity)
+    public function setUser(EntityInterface $entity): void
     {
         $this->_currentUser = $entity;
     }
@@ -70,12 +72,12 @@ class FootprintListener implements EventListenerInterface
     /**
      * Universal callback.
      *
-     * @param \Cake\Event\Event $event Event.
+     * @param \Cake\Event\EventInterface $event Event.
      * @param mixed $ormObject Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      */
-    public function handleEvent(Event $event, $ormObject, $options)
+    public function handleEvent(EventInterface $event, $ormObject, $options): void
     {
         $key = $this->getConfig('optionKey');
         if (empty($options[$key]) && !empty($this->_currentUser)) {

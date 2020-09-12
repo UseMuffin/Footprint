@@ -1,21 +1,22 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 class FootprintBehaviorTest extends TestCase
 {
-    public $fixtures = [
+    protected $fixtures = [
         'plugin.Muffin/Footprint.Articles',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        $table = TableRegistry::get('Muffin/Footprint.Articles');
+        $table = $this->getTableLocator()->get('Muffin/Footprint.Articles');
         $table->addBehavior('Muffin/Footprint.Footprint', [
             'events' => [
                 'Model.beforeSave' => [
@@ -37,10 +38,10 @@ class FootprintBehaviorTest extends TestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
-        TableRegistry::clear();
+        $this->getTableLocator()->clear();
     }
 
     public function testSave()
@@ -93,14 +94,11 @@ class FootprintBehaviorTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage When should be one of "always", "new" or "existing". The passed value "invalid" is invalid
-     *
-     * @return void
-     */
     public function testInjectEntityException()
     {
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('When should be one of "always", "new" or "existing". The passed value "invalid" is invalid');
+
         $this->Table->behaviors()->Footprint->setConfig(
             'events',
             [
@@ -113,15 +111,14 @@ class FootprintBehaviorTest extends TestCase
         $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Event "Model.beforeMarshal" is not supported.
-     */
     public function testDispatchException()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Event "Model.beforeMarshal" is not supported.');
+
         $behavior = $this->Table->behaviors()->Footprint;
         $behavior->setConfig('events', ['Model.beforeMarshal' => ['modified_by']]);
         $this->Table->getEventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
-        $entity = $this->Table->newEntity([]);
+        $this->Table->newEntity([]);
     }
 }

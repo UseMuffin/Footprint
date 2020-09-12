@@ -1,6 +1,6 @@
 {
     "name": "muffin/footprint",
-    "description": "CakePHP 3.0+ plugin to allow passing currently logged in user to model layer",
+    "description": "CakePHP plugin to allow passing currently logged in user to model layer",
     "type": "cakephp-plugin",
     "keywords": [
         "cakephp",
@@ -30,11 +30,15 @@
         "source": "https://github.com/usemuffin/footprint"
     },
     "require": {
-        "cakephp/cakephp": "^3.5"
+        "cakephp/cakephp": "^4.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^3.0",
-        "phpunit/phpunit": "^5.7.14|^6.0"
+        "cakephp/cakephp-codesniffer": "^4.0",
+        "phpunit/phpunit": "~8.5.0"
+    },
+    "scripts": {
+        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/"
     },
     "autoload": {
         "psr-4": {

@@ -1,14 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Auth;
 
-use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
-use Cake\ORM\TableRegistry;
 use Muffin\Footprint\Event\FootprintListener;
+use RuntimeException;
 
 trait FootprintAwareTrait
 {
-
     /**
      * User model.
      *
@@ -19,7 +21,7 @@ trait FootprintAwareTrait
     /**
      * Instance of currently logged in user.
      *
-     * @var \Cake\ORM\Entity
+     * @var \Cake\Datasource\EntityInterface|null
      */
     protected $_currentUserInstance;
 
@@ -35,7 +37,7 @@ trait FootprintAwareTrait
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
 
@@ -48,17 +50,18 @@ trait FootprintAwareTrait
      * It also passing the user record to footprint listener after user is
      * identified by AuthComponent.
      *
-     * @param \Cake\Event\Event $event Event.
+     * @param \Cake\Event\EventInterface $event Event.
      * @return void
      */
-    public function footprint(Event $event)
+    public function footprint(EventInterface $event): void
     {
         if (!$this->_listener) {
             $this->_listener = new FootprintListener($this->_getCurrentUser());
         }
 
         if ($event->getName() === 'Auth.afterIdentify') {
-            $this->_listener->setUser($this->_getCurrentUser($event->getData(0)));
+            $data = $event->getData();
+            $this->_listener->setUser($this->_getCurrentUser($data[0]));
 
             return;
         }
@@ -70,19 +73,18 @@ trait FootprintAwareTrait
      * Returns an instance of the current authenticated user. If a `$user`
      * is provided, will overwrite the current logged in user instance.
      *
-     * @param \Cake\ORM\Entity|array $user User.
-     * @return \Cake\ORM\Entity
+     * @param \Cake\Datasource\EntityInterface|array|null $user User.
+     * @return \Cake\Datasource\EntityInterface|null
      */
-    protected function _getCurrentUser($user = null)
+    protected function _getCurrentUser($user = null): ?EntityInterface
     {
         $this->_setCurrentUser($user);
 
         if (
             !$this->_currentUserInstance &&
-            isset($this->_currentUserViewVar) &&
-            !empty($this->viewVars[$this->_currentUserViewVar])
+            isset($this->_currentUserViewVar)
         ) {
-            $this->_currentUserInstance = $this->viewVars[$this->_currentUserViewVar];
+            $this->_currentUserInstance = $this->viewBuilder()->getVar($this->_currentUserViewVar);
         }
 
         return $this->_currentUserInstance;
@@ -92,17 +94,28 @@ trait FootprintAwareTrait
      * Sets the current logged in user to `$user`. If none provided,
      * fallsback to `Cake\Controller\Component\AuthComponent::user()`.
      *
-     * @param \Cake\ORM\Entity|array $user User.
-     * @return \Cake\ORM\Entity|bool
+     * @param \Cake\Datasource\EntityInterface|array|null $user User.
+     * @return \Cake\Datasource\EntityInterface|null
      */
-    protected function _setCurrentUser($user = null)
+    protected function _setCurrentUser($user = null): ?EntityInterface
     {
-        if ($user === null && !empty($this->Auth)) {
-            $user = $this->Auth->user();
+        if ($user === null) {
+            if ($this->components()->has('Authentication')) {
+                $identity = $this->Authentication->getIdentity();
+                if ($identity) {
+                    $user = $identity->getOriginalData();
+                }
+            } elseif ($this->components()->has('Auth')) {
+                $user = $this->Auth->user();
+            } else {
+                throw new RuntimeException(
+                    'You must have AuthenticationComponent or AuthComponent loaded to use Footprint'
+                );
+            }
         }
 
         if (!$user) {
-            return false;
+            return null;
         }
 
         $this->_currentUserInstance = $this->_getUserInstance($user);
@@ -113,10 +126,10 @@ trait FootprintAwareTrait
     /**
      * Creates instance of `$user`.
      *
-     * @param \Cake\ORM\Entity|array $user User.
-     * @return \Cake\ORM\Entity
+     * @param \Cake\Datasource\EntityInterface|array $user User.
+     * @return \Cake\Datasource\EntityInterface
      */
-    protected function _getUserInstance($user)
+    protected function _getUserInstance($user): EntityInterface
     {
         if ($this->_checkUserInstanceOf($user)) {
             return $user;
@@ -131,12 +144,15 @@ trait FootprintAwareTrait
      *
      * @param string $method Method name.
      * @param array $args Arguments to pass to the method.
-     * @return \Cake\ORM\Table The users table.
+     * @return mixed
      */
-    protected function _circumventEventManager($method, $args = [])
+    protected function _circumventEventManager(string $method, array $args = [])
     {
         EventManager::instance()->off('Model.initialize', [$this, 'footprint']);
-        $result = call_user_func_array([TableRegistry::get($this->_userModel), $method], $args);
+        $result = call_user_func_array(
+            [$this->getTableLocator()->get($this->_userModel), $method],
+            $args
+        );
         EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
 
         return $result;
@@ -145,10 +161,10 @@ trait FootprintAwareTrait
     /**
      * Get user entity from data array.
      *
-     * @param array $user User data
-     * @return \Cake\ORM\Entity
+     * @param array|\Cake\Datasource\EntityInterface $user User data
+     * @return \Cake\Datasource\EntityInterface
      */
-    protected function _getUserInstanceFromArray($user)
+    protected function _getUserInstanceFromArray($user): EntityInterface
     {
         $options = ['accessibleFields' => ['*' => true], 'validate' => false];
 
@@ -158,10 +174,10 @@ trait FootprintAwareTrait
     /**
      * Check given object is of user entity type.
      *
-     * @param \Cake\ORM\Entity $user User entity.
+     * @param \Cake\Datasource\EntityInterface|array $user User entity.
      * @return bool
      */
-    protected function _checkUserInstanceOf($user)
+    protected function _checkUserInstanceOf($user): bool
     {
         $entityClass = $this->_circumventEventManager('getEntityClass');
 

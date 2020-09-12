@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Muffin\Footprint\Model\Behavior;
 
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
@@ -13,7 +15,6 @@ use UnexpectedValueException;
 
 class FootprintBehavior extends Behavior
 {
-
     /**
      * Default config.
      *
@@ -32,9 +33,9 @@ class FootprintBehavior extends Behavior
     ];
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (isset($config['events'])) {
             $this->setConfig('events', $config['events'], false);
@@ -69,9 +70,9 @@ class FootprintBehavior extends Behavior
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         // Map all configured events to a single handler
         return array_fill_keys(
@@ -85,13 +86,13 @@ class FootprintBehavior extends Behavior
      *
      * Called by the event manager as per list provided by implementedEvents().
      *
-     * @param \Cake\Event\Event $event Event.
+     * @param \Cake\Event\EventInterface $event Event.
      * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $data Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      * @throws \InvalidArgumentException If method is called with an unsupported event.
      */
-    public function dispatch(Event $event, $data, ArrayObject $options)
+    public function dispatch(EventInterface $event, $data, ArrayObject $options): void
     {
         $eventName = $event->getName();
         if (empty($this->_config['events'][$eventName])) {
@@ -126,7 +127,7 @@ class FootprintBehavior extends Behavior
      * @param array $fields Field configuration.
      * @return void
      */
-    protected function _injectConditions(Query $query, ArrayObject $options, array $fields)
+    protected function _injectConditions(Query $query, ArrayObject $options, array $fields): void
     {
         foreach (array_keys($fields) as $field) {
             $path = $this->getConfig('propertiesMap.' . $field);
@@ -145,7 +146,8 @@ class FootprintBehavior extends Behavior
                 );
             });
 
-            if (!$check && $value = Hash::get((array)$options, $path)) {
+            $value = Hash::get((array)$options, $path);
+            if (!$check && $value) {
                 $query->where([$this->_table->aliasField($field) => $value]);
             }
         }
@@ -159,7 +161,7 @@ class FootprintBehavior extends Behavior
      * @param array $fields Field configuration.
      * @return void
      */
-    protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields)
+    protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields): void
     {
         $new = $entity->isNew() !== false;
 

@@ -1,0 +1,10 @@
+parameters:
+    level: 6
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        -
+            message: "#^Negated boolean expression is always true\\.$#"
+            count: 1
+            path: src/Model/Behavior/FootprintBehavior.php
