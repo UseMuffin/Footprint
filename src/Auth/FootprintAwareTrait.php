@@ -28,7 +28,7 @@ trait FootprintAwareTrait
     /**
      * Footprint listener instance.
      *
-     * @var \Cake\Event\EventListenerInterface
+     * @var \Muffin\Footprint\Event\FootprintListener
      */
     protected $_listener;
 
@@ -107,7 +107,7 @@ trait FootprintAwareTrait
                 }
             } elseif ($this->components()->has('Auth')) {
                 $user = $this->Auth->user();
-            } else {
+            } elseif ($this->name !== 'Error') {
                 throw new RuntimeException(
                     'You must have AuthenticationComponent or AuthComponent loaded to use Footprint'
                 );
