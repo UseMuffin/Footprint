@@ -34,7 +34,8 @@
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^4.0",
-        "phpunit/phpunit": "~8.5.0"
+        "phpunit/phpunit": "~8.5.0",
+        "cakephp/authentication": "^2.3"
     },
     "scripts": {
         "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
