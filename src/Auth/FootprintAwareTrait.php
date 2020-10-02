@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace Muffin\Footprint\Auth;
 
+use Authentication\IdentityInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Muffin\Footprint\Event\FootprintListener;
-use RuntimeException;
 
+/**
+ * @property \Cake\Http\ServerRequest $request
+ */
 trait FootprintAwareTrait
 {
     /**
@@ -107,10 +110,11 @@ trait FootprintAwareTrait
                 }
             } elseif ($this->components()->has('Auth')) {
                 $user = $this->Auth->user();
-            } elseif ($this->name !== 'Error') {
-                throw new RuntimeException(
-                    'You must have AuthenticationComponent or AuthComponent loaded to use Footprint'
-                );
+            } else {
+                $identity = $this->request->getAttribute('identity');
+                if ($identity && $identity instanceof IdentityInterface) {
+                    $user = $identity->getOriginalData();
+                }
             }
         }
 
