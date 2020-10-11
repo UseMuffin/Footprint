@@ -5,6 +5,7 @@ namespace Muffin\Footprint\Model\Behavior;
 
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\ExpressionInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
@@ -133,7 +134,7 @@ class FootprintBehavior extends Behavior
             $path = $this->getConfig('propertiesMap.' . $field);
 
             $check = false;
-            $query->traverseExpressions(function ($expression) use (&$check, $field, $query) {
+            $query->traverseExpressions(function (ExpressionInterface $expression) use (&$check, $field, $query) {
                 if ($expression instanceof IdentifierExpression) {
                     !$check && $check = $expression->getIdentifier() === $field;
 
@@ -142,7 +143,9 @@ class FootprintBehavior extends Behavior
                 $alias = $this->_table->aliasField($field);
                 !$check && $check = preg_match(
                     '/^' . $alias . '/',
-                    $expression->sql($query->getValueBinder())
+                    // TODO: Add test to show that cloning is necessary here to avoid issue mentioned in
+                    // https://github.com/UseMuffin/Footprint/issues/74
+                    $expression->sql(clone $query->getValueBinder())
                 );
             });
 
