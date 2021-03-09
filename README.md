@@ -1,7 +1,7 @@
 # Footprint
 
-[![Build Status](https://img.shields.io/travis/UseMuffin/Footprint/master.svg?style=flat-square)](https://travis-ci.org/UseMuffin/Footprint)
-[![Coverage](https://img.shields.io/codecov/c/github/UseMuffin/Footprint.svg?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
+[![Build Status](https://img.shields.io/travis/UseMuffin/Footprint/master.svg?style=flat-square)](https://github.com/UseMuffin/Footprint/actions?query=workflow%3ACI+branch%3Amaster)
+[![Coverage](https://img.shields.io/github/workflow/status/UseMuffin/Footprint/CI/master?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
 [![Total Downloads](https://img.shields.io/packagist/dt/muffin/footprint.svg?style=flat-square)](https://packagist.org/packages/muffin/footprint)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
@@ -67,7 +67,7 @@ You can customize that like so:
 $this->addBehavior('Muffin/Footprint.Footprint', [
     'events' => [
         'Model.beforeSave' => [
-        	'user_id' => 'new',
+            'user_id' => 'new',
             'company_id' => 'new',
             'modified_by' => 'always'
         ]
@@ -114,4 +114,3 @@ Copyright (c) 2015-Present, [Use Muffin][muffin] and licensed under [The MIT Lic
 [composer]:http://getcomposer.org
 [mit]:http://www.opensource.org/licenses/mit-license.php
 [muffin]:http://usemuffin.com
-[Ceeram/Blame]:http://github.com/ceeram/blame
