@@ -135,7 +135,7 @@ trait FootprintAwareTrait
      */
     protected function _getUserInstance($user): EntityInterface
     {
-        if ($this->_checkUserInstanceOf($user)) {
+        if ($user instanceof EntityInterface) {
             return $user;
         }
 
@@ -173,18 +173,5 @@ trait FootprintAwareTrait
         $options = ['accessibleFields' => ['*' => true], 'validate' => false];
 
         return $this->_circumventEventManager('newEntity', [$user, $options]);
-    }
-
-    /**
-     * Check given object is of user entity type.
-     *
-     * @param \Cake\Datasource\EntityInterface|array $user User entity.
-     * @return bool
-     */
-    protected function _checkUserInstanceOf($user): bool
-    {
-        $entityClass = $this->_circumventEventManager('getEntityClass');
-
-        return $user instanceof $entityClass;
     }
 }
