@@ -30,14 +30,14 @@ class FootprintListener implements EventListenerInterface
     /**
      * Instance of currently logged in user.
      *
-     * @var \Cake\Datasource\EntityInterface
+     * @var \Cake\Datasource\EntityInterface|null
      */
     protected $_currentUser;
 
     /**
      * Constructor.
      *
-     * @param \Cake\Datasource\EntityInterface $user User entity.
+     * @param \Cake\Datasource\EntityInterface|null $user User entity.
      * @param array $config Configuration list.
      */
     public function __construct(?EntityInterface $user = null, array $config = [])
@@ -73,14 +73,14 @@ class FootprintListener implements EventListenerInterface
      * Universal callback.
      *
      * @param \Cake\Event\EventInterface $event Event.
-     * @param mixed $ormObject Query or Entity.
+     * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $ormObject Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      */
     public function handleEvent(EventInterface $event, $ormObject, $options): void
     {
         $key = $this->getConfig('optionKey');
-        if (empty($options[$key]) && !empty($this->_currentUser)) {
+        if ($this->_currentUser && empty($options[$key])) {
             $options[$key] = $this->_currentUser;
         }
     }

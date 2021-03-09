@@ -1,8 +1,10 @@
 parameters:
-    level: 6
+    level: 7
     checkGenericClassInNonGenericObjectType: false
     checkMissingIterableValueType: false
     treatPhpDocTypesAsCertain: false
+    paths:
+        - src/
     ignoreErrors:
         -
             message: "#^Negated boolean expression is always true\\.$#"
