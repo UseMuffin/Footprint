@@ -52,7 +52,7 @@ trait FootprintAwareTrait
     /**
      * Try and attach footprint listener to models.
      *
-     * It also passing the user record to footprint listener after user is
+     * It also passes the user record to footprint listener after user is
      * identified by AuthComponent.
      *
      * @param \Cake\Event\EventInterface $event Event.
@@ -75,7 +75,7 @@ trait FootprintAwareTrait
     }
 
     /**
-     * Returns an instance of the current authenticated user. If a `$user`
+     * Returns an instance of the currently authenticated user. If a `$user`
      * is provided, will overwrite the current logged in user instance.
      *
      * @param \Cake\Datasource\EntityInterface|array|null $user User.
@@ -89,8 +89,7 @@ trait FootprintAwareTrait
     }
 
     /**
-     * Sets the current logged in user to `$user`. If none provided,
-     * fallsback to `Cake\Controller\Component\AuthComponent::user()`.
+     * Sets the current logged in user to `$user`.
      *
      * @param \Cake\Datasource\EntityInterface|array|null $user User.
      * @return \Cake\Datasource\EntityInterface|null
@@ -121,7 +120,7 @@ trait FootprintAwareTrait
     }
 
     /**
-     * Creates instance of `$user`.
+     * Creates instance of user entity.
      *
      * @param \Cake\Datasource\EntityInterface|array $user User.
      * @return \Cake\Datasource\EntityInterface
