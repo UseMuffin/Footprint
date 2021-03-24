@@ -28,7 +28,7 @@ trait FootprintAwareTrait
      *
      * @var \Muffin\Footprint\Event\FootprintListener
      */
-    protected $_listener;
+    protected $_footprintListener;
 
     /**
      * Events this trait is interested in.
@@ -53,18 +53,18 @@ trait FootprintAwareTrait
      */
     public function footprint(EventInterface $event): void
     {
-        if (!$this->_listener) {
-            $this->_listener = new FootprintListener($this->_getCurrentUser());
+        if (!$this->_footprintListener) {
+            $this->_footprintListener = new FootprintListener($this->_getCurrentUser());
         }
 
         if ($event->getName() === 'Auth.afterIdentify') {
             $data = $event->getData();
-            $this->_listener->setUser($this->_getCurrentUser($data[0]));
+            $this->_footprintListener->setUser($this->_getCurrentUser($data[0]));
 
             return;
         }
 
-        $event->getSubject()->getEventManager()->on($this->_listener);
+        $event->getSubject()->getEventManager()->on($this->_footprintListener);
     }
 
     /**
