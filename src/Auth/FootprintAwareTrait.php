@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Muffin\Footprint\Auth;
 
+use App\Model\Entity\User;
 use Authentication\IdentityInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -15,11 +16,12 @@ use Muffin\Footprint\Event\FootprintListener;
 trait FootprintAwareTrait
 {
     /**
-     * User model.
+     * User entity class name.
      *
      * @var string
+     * @psalm-var class-string
      */
-    protected $_userModel = 'Users';
+    protected $_footprintEntityClass = User::class;
 
     /**
      * Instance of currently logged in user.
@@ -134,26 +136,6 @@ trait FootprintAwareTrait
     }
 
     /**
-     * Temporarily disable the listener on `Model.initialize` when trying to
-     * fetch instantiate the table and avoid an infinite loop.
-     *
-     * @param string $method Method name.
-     * @param array $args Arguments to pass to the method.
-     * @return mixed
-     */
-    protected function _circumventEventManager(string $method, array $args = [])
-    {
-        EventManager::instance()->off('Model.initialize', [$this, 'footprint']);
-        $result = call_user_func_array(
-            [$this->getTableLocator()->get($this->_userModel), $method],
-            $args
-        );
-        EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
-
-        return $result;
-    }
-
-    /**
      * Get user entity from data array.
      *
      * @param array|\Cake\Datasource\EntityInterface $user User data
@@ -161,8 +143,9 @@ trait FootprintAwareTrait
      */
     protected function _getUserInstanceFromArray($user): EntityInterface
     {
-        $options = ['accessibleFields' => ['*' => true], 'validate' => false];
-
-        return $this->_circumventEventManager('newEntity', [$user, $options]);
+        return new $this->_footprintEntityClass($user, [
+            'guard' => false,
+            'markClean' => true,
+        ]);
     }
 }

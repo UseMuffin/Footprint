@@ -39,8 +39,10 @@ class AppController extends Controller
 {
     use FootprintAwareTrait;
 
-    // Specify the user model if required. Defaults to "Users".
-    $this->_userModel = 'YourPlugin.Members';
+    public function initialize(): void
+    {
+        $this->_footprintEntityClass = \App\Model\Entity\User::class; //default value
+    }
 }
 ```
 
