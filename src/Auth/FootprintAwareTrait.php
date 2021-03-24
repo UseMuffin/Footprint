@@ -83,13 +83,6 @@ trait FootprintAwareTrait
     {
         $this->_setCurrentUser($user);
 
-        if (
-            !$this->_currentUserInstance &&
-            isset($this->_currentUserViewVar)
-        ) {
-            $this->_currentUserInstance = $this->viewBuilder()->getVar($this->_currentUserViewVar);
-        }
-
         return $this->_currentUserInstance;
     }
 
