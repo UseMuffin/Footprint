@@ -24,13 +24,6 @@ trait FootprintAwareTrait
     protected $_footprintEntityClass = User::class;
 
     /**
-     * Instance of currently logged in user.
-     *
-     * @var \Cake\Datasource\EntityInterface|null
-     */
-    protected $_currentUserInstance;
-
-    /**
      * Footprint listener instance.
      *
      * @var \Muffin\Footprint\Event\FootprintListener
@@ -83,19 +76,6 @@ trait FootprintAwareTrait
      */
     protected function _getCurrentUser($user = null): ?EntityInterface
     {
-        $this->_setCurrentUser($user);
-
-        return $this->_currentUserInstance;
-    }
-
-    /**
-     * Sets the current logged in user to `$user`.
-     *
-     * @param \Cake\Datasource\EntityInterface|array|null $user User.
-     * @return \Cake\Datasource\EntityInterface|null
-     */
-    protected function _setCurrentUser($user = null): ?EntityInterface
-    {
         if ($user === null) {
             if ($this->components()->has('Authentication')) {
                 $identity = $this->Authentication->getIdentity();
@@ -116,7 +96,7 @@ trait FootprintAwareTrait
             return null;
         }
 
-        return $this->_currentUserInstance = $this->_getUserInstance($user);
+        return $this->_getUserEntity($user);
     }
 
     /**
@@ -125,13 +105,13 @@ trait FootprintAwareTrait
      * @param \Cake\Datasource\EntityInterface|array $user User.
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _getUserInstance($user): EntityInterface
+    protected function _getUserEntity($user): EntityInterface
     {
         if ($user instanceof EntityInterface) {
             return $user;
         }
 
-        return $this->_getUserInstanceFromArray($user);
+        return $this->_getUserEntityFromArray($user);
     }
 
     /**
@@ -140,7 +120,7 @@ trait FootprintAwareTrait
      * @param array|\Cake\Datasource\EntityInterface $user User data
      * @return \Cake\Datasource\EntityInterface
      */
-    protected function _getUserInstanceFromArray($user): EntityInterface
+    protected function _getUserEntityFromArray($user): EntityInterface
     {
         return new $this->_footprintEntityClass($user, [
             'guard' => false,
