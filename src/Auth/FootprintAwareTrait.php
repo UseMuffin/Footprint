@@ -122,9 +122,7 @@ trait FootprintAwareTrait
             return null;
         }
 
-        $this->_currentUserInstance = $this->_getUserInstance($user);
-
-        return $this->_currentUserInstance;
+        return $this->_currentUserInstance = $this->_getUserInstance($user);
     }
 
     /**
