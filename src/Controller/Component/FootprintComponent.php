@@ -63,6 +63,10 @@ class FootprintComponent extends Component
      */
     public function afterIdentify(EventInterface $event): void
     {
+        /**
+         * @psalm-suppress PossiblyNullArrayAccess
+         * @psalm-suppress PossiblyNullArgument
+         */
         $this->getListener()->setUser($this->_getCurrentUser($event->getData()[0]));
     }
 
@@ -91,11 +95,13 @@ class FootprintComponent extends Component
     {
         if ($user === null) {
             if ($this->getController()->components()->has('Authentication')) {
+                /** @psalm-suppress UndefinedMagicPropertyFetch */
                 $identity = $this->getController()->Authentication->getIdentity();
                 if ($identity) {
                     $user = $identity->getOriginalData();
                 }
             } elseif ($this->getController()->components()->has('Auth')) {
+                /** @psalm-suppress UndefinedMagicPropertyFetch */
                 $user = $this->getController()->Auth->user();
             } else {
                 $identity = $this->getController()->getRequest()->getAttribute('identity');
@@ -135,7 +141,7 @@ class FootprintComponent extends Component
      */
     protected function _getUserEntityFromArray($user): EntityInterface
     {
-        /** @var \Cake\Datasource\EntityInterface $userEntityClass */
+        /** @psalm-var class-string<\Cake\Datasource\EntityInterface> $userEntityClass */
         $userEntityClass = $this->getConfig('userEntityClass');
 
         return new $userEntityClass($user, [
