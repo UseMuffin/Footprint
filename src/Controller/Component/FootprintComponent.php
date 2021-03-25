@@ -1,70 +1,83 @@
 <?php
 declare(strict_types=1);
 
-namespace Muffin\Footprint\Auth;
+namespace Muffin\Footprint\Controller\Component;
 
-use App\Model\Entity\User;
 use Authentication\IdentityInterface;
+use Cake\Controller\Component;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Muffin\Footprint\Event\FootprintListener;
 
-/**
- * @property \Cake\Http\ServerRequest $request
- */
-trait FootprintAwareTrait
+class FootprintComponent extends Component
 {
     /**
-     * User entity class name.
+     * Default config
      *
-     * @var string
-     * @psalm-var class-string
+     * @var array
      */
-    protected $_footprintEntityClass = User::class;
+    protected $_defaultConfig = [
+        'userEntityClass' => 'App\Model\Entity\User',
+    ];
 
     /**
      * Footprint listener instance.
      *
-     * @var \Muffin\Footprint\Event\FootprintListener
+     * @var \Muffin\Footprint\Event\FootprintListener|null
      */
-    protected $_footprintListener;
+    protected $_listener;
 
     /**
-     * Events this trait is interested in.
+     * Events this component is interested in.
      *
      * @return array
      */
     public function implementedEvents(): array
     {
-        EventManager::instance()->on('Model.initialize', [$this, 'footprint']);
-
-        return parent::implementedEvents() + ['Auth.afterIdentify' => 'footprint'];
+        return [
+            'Controller.initialize' => 'beforeFilter',
+            'Auth.afterIdentify' => 'afterIdentify',
+        ];
     }
 
     /**
-     * Try and attach footprint listener to models.
+     * Attach footprint listener to models.
      *
-     * It also passes the user record to footprint listener after user is
-     * identified by AuthComponent.
+     * @return void
+     */
+    public function beforeFilter(): void
+    {
+        EventManager::instance()->on('Model.initialize', function (EventInterface $event) {
+            $event->getSubject()->getEventManager()->on($this->getListener());
+        });
+    }
+
+    /**
+     * Callback for `Auth.afterIdentify` event of AuthComponent.
+     *
+     * Sets user record to the footprint listener.
      *
      * @param \Cake\Event\EventInterface $event Event.
      * @return void
      */
-    public function footprint(EventInterface $event): void
+    public function afterIdentify(EventInterface $event): void
     {
-        if (!$this->_footprintListener) {
-            $this->_footprintListener = new FootprintListener($this->_getCurrentUser());
+        $this->getListener()->setUser($this->_getCurrentUser($event->getData()[0]));
+    }
+
+    /**
+     * Get footprint listener
+     *
+     * @return \Muffin\Footprint\Event\FootprintListener
+     */
+    public function getListener(): FootprintListener
+    {
+        if (!$this->_listener) {
+            $this->_listener = new FootprintListener($this->_getCurrentUser());
         }
 
-        if ($event->getName() === 'Auth.afterIdentify') {
-            $data = $event->getData();
-            $this->_footprintListener->setUser($this->_getCurrentUser($data[0]));
-
-            return;
-        }
-
-        $event->getSubject()->getEventManager()->on($this->_footprintListener);
+        return $this->_listener;
     }
 
     /**
@@ -77,15 +90,15 @@ trait FootprintAwareTrait
     protected function _getCurrentUser($user = null): ?EntityInterface
     {
         if ($user === null) {
-            if ($this->components()->has('Authentication')) {
-                $identity = $this->Authentication->getIdentity();
+            if ($this->getController()->components()->has('Authentication')) {
+                $identity = $this->getController()->Authentication->getIdentity();
                 if ($identity) {
                     $user = $identity->getOriginalData();
                 }
-            } elseif ($this->components()->has('Auth')) {
-                $user = $this->Auth->user();
+            } elseif ($this->getController()->components()->has('Auth')) {
+                $user = $this->getController()->Auth->user();
             } else {
-                $identity = $this->request->getAttribute('identity');
+                $identity = $this->getController()->getRequest()->getAttribute('identity');
                 if ($identity && $identity instanceof IdentityInterface) {
                     $user = $identity->getOriginalData();
                 }
@@ -122,7 +135,10 @@ trait FootprintAwareTrait
      */
     protected function _getUserEntityFromArray($user): EntityInterface
     {
-        return new $this->_footprintEntityClass($user, [
+        /** @var \Cake\Datasource\EntityInterface $userEntityClass */
+        $userEntityClass = $this->getConfig('userEntityClass');
+
+        return new $userEntityClass($user, [
             'guard' => false,
             'markClean' => true,
         ]);

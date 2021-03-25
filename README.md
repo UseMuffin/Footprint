@@ -27,21 +27,23 @@ bin/cake plugin load Muffin/Footprint
 
 ## Usage
 
-### Trait
+### Component
 
-First, you will need to include the `Muffin\Footprint\Auth\FootprintAwareTrait`
-to your `AppController`:
+First, you will need to load the `Muffin/Footprint.Footprint` in your `AppController`.
+Load it **after** `AuthenticationComponent`/`AuthComponent` and **before** any
+other components which use a model:
 
 ```php
-use Muffin\Footprint\Auth\FootprintAwareTrait;
-
 class AppController extends Controller
 {
-    use FootprintAwareTrait;
-
     public function initialize(): void
     {
-        $this->_footprintEntityClass = \App\Model\Entity\User::class; //default value
+        $this->loadComponent(
+            'Muffin/Footprint.Footprint',
+            [
+                'userEntityClass' => \App\Model\Entity\User::class, //default value
+            ]
+        );
     }
 }
 ```
@@ -91,9 +93,8 @@ If you have the `FootprintBehavior` attached to a model do not load the model in
 `Controller::initialize()` method directly or indirectly. If you do so the
 footprint (user entity) won't be set for the model and the behavior won't work
 as expected. You can load your model in `Controller::beforeFilter()` if needed.
-
-This is because the `FootprintListener` which sets the user entity to the models
-is attached after `Controller::initialize()` is run.
+Also configure your `AuthComponent`/`AuthenticationComponent` to do auth check
+in `Controller.initialize` event.
 
 ## Patches & Features
 

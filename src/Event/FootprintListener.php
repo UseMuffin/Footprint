@@ -70,6 +70,16 @@ class FootprintListener implements EventListenerInterface
     }
 
     /**
+     * Get current user entity.
+     *
+     * @return \Cake\Datasource\EntityInterface|null
+     */
+    public function getUser(): ?EntityInterface
+    {
+        return $this->_currentUser;
+    }
+
+    /**
      * Universal callback.
      *
      * @param \Cake\Event\EventInterface $event Event.
