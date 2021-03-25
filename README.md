@@ -1,7 +1,7 @@
 # Footprint
 
-[![Build Status](https://img.shields.io/travis/UseMuffin/Footprint/master.svg?style=flat-square)](https://travis-ci.org/UseMuffin/Footprint)
-[![Coverage](https://img.shields.io/codecov/c/github/UseMuffin/Footprint.svg?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
+[![Build Status](https://img.shields.io/travis/UseMuffin/Footprint/master.svg?style=flat-square)](https://github.com/UseMuffin/Footprint/actions?query=workflow%3ACI+branch%3Amaster)
+[![Coverage](https://img.shields.io/github/workflow/status/UseMuffin/Footprint/CI/master?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
 [![Total Downloads](https://img.shields.io/packagist/dt/muffin/footprint.svg?style=flat-square)](https://packagist.org/packages/muffin/footprint)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
@@ -27,20 +27,24 @@ bin/cake plugin load Muffin/Footprint
 
 ## Usage
 
-### Trait
+### Component
 
-First, you will need to include the `Muffin\Footprint\Auth\FootprintAwareTrait`
-to your `AppController`:
+First, you will need to load the `Muffin/Footprint.Footprint` in your `AppController`.
+Load it **after** `AuthenticationComponent`/`AuthComponent` and **before** any
+other components which use a model:
 
 ```php
-use Muffin\Footprint\Auth\FootprintAwareTrait;
-
 class AppController extends Controller
 {
-    use FootprintAwareTrait;
-
-    // Specify the user model if required. Defaults to "Users".
-    $this->_userModel = 'YourPlugin.Members';
+    public function initialize(): void
+    {
+        $this->loadComponent(
+            'Muffin/Footprint.Footprint',
+            [
+                'userEntityClass' => \App\Model\Entity\User::class, //default value
+            ]
+        );
+    }
 }
 ```
 
@@ -67,7 +71,7 @@ You can customize that like so:
 $this->addBehavior('Muffin/Footprint.Footprint', [
     'events' => [
         'Model.beforeSave' => [
-        	'user_id' => 'new',
+            'user_id' => 'new',
             'company_id' => 'new',
             'modified_by' => 'always'
         ]
@@ -89,9 +93,8 @@ If you have the `FootprintBehavior` attached to a model do not load the model in
 `Controller::initialize()` method directly or indirectly. If you do so the
 footprint (user entity) won't be set for the model and the behavior won't work
 as expected. You can load your model in `Controller::beforeFilter()` if needed.
-
-This is because the `FootprintListener` which sets the user entity to the models
-is attached after `Controller::initialize()` is run.
+Also configure your `AuthComponent`/`AuthenticationComponent` to do auth check
+in `Controller.initialize` event.
 
 ## Patches & Features
 
@@ -114,4 +117,3 @@ Copyright (c) 2015-Present, [Use Muffin][muffin] and licensed under [The MIT Lic
 [composer]:http://getcomposer.org
 [mit]:http://www.opensource.org/licenses/mit-license.php
 [muffin]:http://usemuffin.com
-[Ceeram/Blame]:http://github.com/ceeram/blame
