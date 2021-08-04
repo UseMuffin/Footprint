@@ -29,7 +29,7 @@ bin/cake plugin load Muffin/Footprint
 
 ### Component
 
-First, you will need to load the `Muffin/Footprint.Footprint` in your `AppController`.
+First, you will need to load the `Muffin/Footprint.Footprint` component in your `AppController`.
 Load it **after** `AuthenticationComponent`/`AuthComponent` and **before** any
 other components which use a model:
 
