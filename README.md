@@ -25,36 +25,19 @@ You then need to load the plugin by running console command:
 bin/cake plugin load Muffin/Footprint
 ```
 
+The Footprint plugin **must** be loaded **before** the [Authentication](https://github.com/cakephp/authentication) plugin,
+so you should move the `$this->addPlugin('Muffin/Footprint');` statement above
+the `$this->addPlugin('Authentication');` in your `Application::bootstrap()`
+manually if required.
+
 ## Usage
 
-### Component
+### Middleware
 
-First, you will need to load the `Muffin/Footprint.Footprint` component in your `AppController`.
-Load it **after** `AuthenticationComponent`/`AuthComponent` and **before** any
-other components which use a model:
-
-```php
-class AppController extends Controller
-{
-    public function initialize(): void
-    {
-        $this->loadComponent(
-            'Muffin/Footprint.Footprint',
-            [
-                'userEntityClass' => \App\Model\Entity\User::class, //default value
-            ]
-        );
-    }
-}
-```
-
-This will attach the `Muffin\Footprint\Event\FootprintListener` to models
-which will inject the currently logged in user's instance on `Model.beforeSave`
-and `Model.beforeFind` in the `_footprint` key of `$options`.
-
-Your controller needs to have either `cakephp/authentication` plugin's `AuthenticationComponent`
-or CakePHP core's deprecated `AuthComponent` loaded so that the user identity
-can be fetched.
+Add the `FootprintMiddleware` to the middleware queue in your `Application::middleware()`
+method `$middleware->add('Muffin/Footprint');`.
+It must be added **after** `AuthenticationMiddleware` to ensure that it can read
+the identify info after authentication is done.
 
 ### Behavior
 
@@ -86,15 +69,6 @@ This will insert the currently logged in user's primary key in `user_id` and `mo
 fields when creating a record, on the `modified_by` field again when updating
 the record and it will use the associated user record's company `id` in the
 `company_id` field when creating a record.
-
-## Warning
-
-If you have the `FootprintBehavior` attached to a model do not load the model inside
-`Controller::initialize()` method directly or indirectly. If you do so the
-footprint (user entity) won't be set for the model and the behavior won't work
-as expected. You can load your model in `Controller::beforeFilter()` if needed.
-Also configure your `AuthComponent`/`AuthenticationComponent` to do auth check
-in `Controller.initialize` event.
 
 ## Patches & Features
 

@@ -9,10 +9,4 @@ parameters:
 		-
 			message: "#^Call to an undefined method object\\:\\:getEventManager\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Component/FootprintComponent.php
-
-		-
-			message: "#^Access to an undefined property Cake\\\\Controller\\\\Controller\\:\\:\\$Authentication\\.$#"
-			count: 1
-			path: src/Controller/Component/FootprintComponent.php
-
+			path: src/Plugin.php
