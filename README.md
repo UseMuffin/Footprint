@@ -15,7 +15,7 @@ such as `user_id`, `created_by`, `company_id` similar to the core's `TimestampBe
 
 Using [Composer][composer]:
 
-```
+```bash
 composer require muffin/footprint
 ```
 
@@ -28,13 +28,13 @@ bin/cake plugin load Muffin/Footprint
 The Footprint plugin must be loaded **before** the [Authentication](https://github.com/cakephp/authentication) plugin,
 so you should move the
 
-```
+```php
 $this->addPlugin('Muffin/Footprint');
 ```
 
 statement above the
 
-```
+```php
 $this->addPlugin('Authentication');
 ```
 
@@ -47,7 +47,7 @@ in your `Application::bootstrap()` manually if required.
 Add the `FootprintMiddleware` to the middleware queue in your `Application::middleware()`
 method:
 
-```
+```php
 $middleware->add('Muffin/Footprint.Footprint');
 ```
 
