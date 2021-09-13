@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Footprint\Middleware;
+namespace Muffin\Footprint\Middleware;
 
 use Cake\Datasource\EntityInterface;
 use Muffin\Footprint\Plugin;
