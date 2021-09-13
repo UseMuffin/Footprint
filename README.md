@@ -26,16 +26,30 @@ bin/cake plugin load Muffin/Footprint
 ```
 
 The Footprint plugin must be loaded **before** the [Authentication](https://github.com/cakephp/authentication) plugin,
-so you should move the `$this->addPlugin('Muffin/Footprint');` statement above
-the `$this->addPlugin('Authentication');` in your `Application::bootstrap()`
-manually if required.
+so you should move the
+
+```
+$this->addPlugin('Muffin/Footprint');
+```
+
+statement above the
+
+```
+$this->addPlugin('Authentication');
+```
+
+in your `Application::bootstrap()` manually if required.
 
 ## Usage
 
 ### Middleware
 
 Add the `FootprintMiddleware` to the middleware queue in your `Application::middleware()`
-method `$middleware->add('Muffin/Footprint.Footprint');`.
+method:
+
+```
+$middleware->add('Muffin/Footprint.Footprint');
+```
 
 It must be added **after** `AuthenticationMiddleware` to ensure that it can read
 the identify info after authentication is done.
