@@ -34,7 +34,10 @@ class FootprintBehavior extends Behavior
     ];
 
     /**
-     * @inheritDoc
+     * Intialize the behavior.
+     *
+     * @param array<string, mixeD> $config Config options.
+     * @return void
      */
     public function initialize(array $config): void
     {

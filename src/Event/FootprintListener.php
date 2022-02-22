@@ -15,7 +15,7 @@ class FootprintListener implements EventListenerInterface
     /**
      * Default configuration.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'events' => [
@@ -38,7 +38,7 @@ class FootprintListener implements EventListenerInterface
      * Constructor.
      *
      * @param \Cake\Datasource\EntityInterface|null $user User entity.
-     * @param array $config Configuration list.
+     * @param array<string, mixed> $config Configuration list.
      */
     public function __construct(?EntityInterface $user = null, array $config = [])
     {
@@ -47,7 +47,9 @@ class FootprintListener implements EventListenerInterface
     }
 
     /**
-     * @inheritDoc
+     * Events this listener is interested in.
+     *
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
