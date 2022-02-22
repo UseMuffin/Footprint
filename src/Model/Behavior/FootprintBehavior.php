@@ -19,7 +19,7 @@ class FootprintBehavior extends Behavior
     /**
      * Default config.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'events' => [
@@ -34,7 +34,10 @@ class FootprintBehavior extends Behavior
     ];
 
     /**
-     * @inheritDoc
+     * Intialize the behavior.
+     *
+     * @param array<string, mixeD> $config Config options.
+     * @return void
      */
     public function initialize(array $config): void
     {
@@ -71,11 +74,13 @@ class FootprintBehavior extends Behavior
     }
 
     /**
-     * @inheritDoc
+     * Events this behavior is interested in.
+     *
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
-        // Map all configured events to a single handler
+        /** @phpstan-ignore-next-line */
         return array_fill_keys(
             array_keys($this->_config['events']),
             'dispatch'

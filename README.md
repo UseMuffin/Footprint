@@ -1,7 +1,7 @@
 # Footprint
 
-[![Build Status](https://img.shields.io/travis/UseMuffin/Footprint/master.svg?style=flat-square)](https://travis-ci.org/UseMuffin/Footprint)
-[![Coverage](https://img.shields.io/codecov/c/github/UseMuffin/Footprint.svg?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
+[![Build Status](https://img.shields.io/travis/UseMuffin/Footprint/master.svg?style=flat-square)](https://github.com/UseMuffin/Footprint/actions?query=workflow%3ACI+branch%3Amaster)
+[![Coverage](https://img.shields.io/github/workflow/status/UseMuffin/Footprint/CI/master?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
 [![Total Downloads](https://img.shields.io/packagist/dt/muffin/footprint.svg?style=flat-square)](https://packagist.org/packages/muffin/footprint)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
@@ -15,7 +15,7 @@ such as `user_id`, `created_by`, `company_id` similar to the core's `TimestampBe
 
 Using [Composer][composer]:
 
-```
+```bash
 composer require muffin/footprint
 ```
 
@@ -25,32 +25,34 @@ You then need to load the plugin by running console command:
 bin/cake plugin load Muffin/Footprint
 ```
 
-## Usage
-
-### Trait
-
-First, you will need to include the `Muffin\Footprint\Auth\FootprintAwareTrait`
-to your `AppController`:
+The Footprint plugin must be loaded **before** the [Authentication](https://github.com/cakephp/authentication) plugin,
+so you should move the
 
 ```php
-use Muffin\Footprint\Auth\FootprintAwareTrait;
-
-class AppController extends Controller
-{
-    use FootprintAwareTrait;
-
-    // Specify the user model if required. Defaults to "Users".
-    $this->_userModel = 'YourPlugin.Members';
-}
+$this->addPlugin('Muffin/Footprint');
 ```
 
-This will attach the `Muffin\Footprint\Event\FootprintListener` to models
-which will inject the currently logged in user's instance on `Model.beforeSave`
-and `Model.beforeFind` in the `_footprint` key of `$options`.
+statement above the
 
-Your controller needs to have either `cakephp/authentication` plugin's `AuthenticationComponent`
-or CakePHP core's deprecated `AuthComponent` loaded so that the user identity
-can be fetched.
+```php
+$this->addPlugin('Authentication');
+```
+
+in your `Application::bootstrap()` manually if required.
+
+## Usage
+
+### Middleware
+
+Add the `FootprintMiddleware` to the middleware queue in your `Application::middleware()`
+method:
+
+```php
+$middleware->add('Muffin/Footprint.Footprint');
+```
+
+It must be added **after** `AuthenticationMiddleware` to ensure that it can read
+the identify info after authentication is done.
 
 ### Behavior
 
@@ -67,7 +69,7 @@ You can customize that like so:
 $this->addBehavior('Muffin/Footprint.Footprint', [
     'events' => [
         'Model.beforeSave' => [
-        	'user_id' => 'new',
+            'user_id' => 'new',
             'company_id' => 'new',
             'modified_by' => 'always'
         ]
@@ -82,16 +84,6 @@ This will insert the currently logged in user's primary key in `user_id` and `mo
 fields when creating a record, on the `modified_by` field again when updating
 the record and it will use the associated user record's company `id` in the
 `company_id` field when creating a record.
-
-## Warning
-
-If you have the `FootprintBehavior` attached to a model do not load the model inside
-`Controller::initialize()` method directly or indirectly. If you do so the
-footprint (user entity) won't be set for the model and the behavior won't work
-as expected. You can load your model in `Controller::beforeFilter()` if needed.
-
-This is because the `FootprintListener` which sets the user entity to the models
-is attached after `Controller::initialize()` is run.
 
 ## Patches & Features
 
@@ -114,4 +106,3 @@ Copyright (c) 2015-Present, [Use Muffin][muffin] and licensed under [The MIT Lic
 [composer]:http://getcomposer.org
 [mit]:http://www.opensource.org/licenses/mit-license.php
 [muffin]:http://usemuffin.com
-[Ceeram/Blame]:http://github.com/ceeram/blame

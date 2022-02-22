@@ -15,7 +15,7 @@ class FootprintListener implements EventListenerInterface
     /**
      * Default configuration.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'events' => [
@@ -30,15 +30,15 @@ class FootprintListener implements EventListenerInterface
     /**
      * Instance of currently logged in user.
      *
-     * @var \Cake\Datasource\EntityInterface
+     * @var \Cake\Datasource\EntityInterface|null
      */
     protected $_currentUser;
 
     /**
      * Constructor.
      *
-     * @param \Cake\Datasource\EntityInterface $user User entity.
-     * @param array $config Configuration list.
+     * @param \Cake\Datasource\EntityInterface|null $user User entity.
+     * @param array<string, mixed> $config Configuration list.
      */
     public function __construct(?EntityInterface $user = null, array $config = [])
     {
@@ -47,7 +47,9 @@ class FootprintListener implements EventListenerInterface
     }
 
     /**
-     * @inheritDoc
+     * Events this listener is interested in.
+     *
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
@@ -70,17 +72,27 @@ class FootprintListener implements EventListenerInterface
     }
 
     /**
+     * Get current user entity.
+     *
+     * @return \Cake\Datasource\EntityInterface|null
+     */
+    public function getUser(): ?EntityInterface
+    {
+        return $this->_currentUser;
+    }
+
+    /**
      * Universal callback.
      *
      * @param \Cake\Event\EventInterface $event Event.
-     * @param mixed $ormObject Query or Entity.
+     * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $ormObject Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      */
     public function handleEvent(EventInterface $event, $ormObject, $options): void
     {
         $key = $this->getConfig('optionKey');
-        if (empty($options[$key]) && !empty($this->_currentUser)) {
+        if ($this->_currentUser && empty($options[$key])) {
             $options[$key] = $this->_currentUser;
         }
     }

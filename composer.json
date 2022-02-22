@@ -52,5 +52,10 @@
             "TestApp\\": "tests/test_app/TestApp",
             "Cake\\Test\\Fixture\\": "vendor/cakephp/cakephp/tests/Fixture"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
