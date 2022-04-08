@@ -54,6 +54,25 @@ $middleware->add('Muffin/Footprint.Footprint');
 It must be added **after** `AuthenticationMiddleware` to ensure that it can read
 the identify info after authentication is done.
 
+If you don't have direct access to the place where `AuthenticationMiddleware` is enqueued you can instead enqueue it via adding this to your `src/Application.php`
+
+```php
+use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Event\EventInterface;
+use Cake\Event\EventManager;
+use Cake\Http\MiddlewareQueue;
+use Muffin\Footprint\Middleware\FootprintMiddleware;
+
+// inside the bootstrap() method
+$eventManager = EventManager::instance();
+$eventManager->on(
+    'Server.buildMiddleware',
+    function (EventInterface $event, MiddlewareQueue $middleware) {
+        $middleware->insertAfter(AuthenticationMiddleware::class, new FootprintMiddleware());
+    }
+);
+```
+
 ### Behavior
 
 To use the included behavior to automatically update the `created_by` and `modified_by`
