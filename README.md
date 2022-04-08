@@ -54,7 +54,7 @@ $middleware->add('Muffin/Footprint.Footprint');
 It must be added **after** `AuthenticationMiddleware` to ensure that it can read
 the identify info after authentication is done.
 
-If you don't have direct access to the place where `AuthenticationMiddleware` is added then check [here](#adding-middleware-via-event)
+If you don't have direct access to the place where `AuthenticationMiddleware` is added then check [here](#adding-middleware-via-event).
 
 ### Behavior
 
@@ -101,7 +101,7 @@ use Muffin\Footprint\Middleware\FootprintMiddleware;
 $this->getEventManager()->on(
     'Server.buildMiddleware',
     function (EventInterface $event, MiddlewareQueue $middleware) {
-        $middleware->insertAfter(AuthenticationMiddleware::class, new FootprintMiddleware());
+        $middleware->insertAfter(AuthenticationMiddleware::class, FootprintMiddleware::class);
     }
 );
 ```
