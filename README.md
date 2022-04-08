@@ -94,7 +94,6 @@ In some cases you don't have direct access to the place where the `Authenticatio
 ```php
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Event\EventInterface;
-use Cake\Event\EventManager;
 use Cake\Http\MiddlewareQueue;
 use Muffin\Footprint\Middleware\FootprintMiddleware;
 
