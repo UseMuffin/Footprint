@@ -99,8 +99,7 @@ use Cake\Http\MiddlewareQueue;
 use Muffin\Footprint\Middleware\FootprintMiddleware;
 
 // inside the bootstrap() method
-$eventManager = EventManager::instance();
-$eventManager->on(
+$this->getEventManager()->on(
     'Server.buildMiddleware',
     function (EventInterface $event, MiddlewareQueue $middleware) {
         $middleware->insertAfter(AuthenticationMiddleware::class, new FootprintMiddleware());
