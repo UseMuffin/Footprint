@@ -54,6 +54,8 @@ $middleware->add('Muffin/Footprint.Footprint');
 It must be added **after** `AuthenticationMiddleware` to ensure that it can read
 the identify info after authentication is done.
 
+If you don't have direct access to the place where `AuthenticationMiddleware` is added then check [here](#adding-middleware-via-event).
+
 ### Behavior
 
 To use the included behavior to automatically update the `created_by` and `modified_by`
@@ -84,6 +86,25 @@ This will insert the currently logged in user's primary key in `user_id` and `mo
 fields when creating a record, on the `modified_by` field again when updating
 the record and it will use the associated user record's company `id` in the
 `company_id` field when creating a record.
+
+### Adding middleware via event
+
+In some cases you don't have direct access to the place where the `AuthenticationMiddleware` is added. Then you will have to add this to your `src/Application.php`
+
+```php
+use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Event\EventInterface;
+use Cake\Http\MiddlewareQueue;
+use Muffin\Footprint\Middleware\FootprintMiddleware;
+
+// inside the bootstrap() method
+$this->getEventManager()->on(
+    'Server.buildMiddleware',
+    function (EventInterface $event, MiddlewareQueue $middleware) {
+        $middleware->insertAfter(AuthenticationMiddleware::class, FootprintMiddleware::class);
+    }
+);
+```
 
 ## Patches & Features
 
