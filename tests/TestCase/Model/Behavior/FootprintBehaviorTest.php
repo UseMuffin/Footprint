@@ -4,11 +4,16 @@ declare(strict_types=1);
 namespace Muffin\Footprint\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
 use Cake\TestSuite\TestCase;
 
 class FootprintBehaviorTest extends TestCase
 {
-    protected $fixtures = [
+    protected Table $Table;
+
+    protected Entity $footprint;
+
+    protected array $fixtures = [
         'plugin.Muffin/Footprint.Articles',
     ];
 
@@ -109,16 +114,5 @@ class FootprintBehaviorTest extends TestCase
         );
         $entity = new Entity(['title' => 'new article']);
         $entity = $this->Table->save($entity, ['_footprint' => $this->footprint]);
-    }
-
-    public function testDispatchException()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Event "Model.beforeMarshal" is not supported.');
-
-        $behavior = $this->Table->behaviors()->Footprint;
-        $behavior->setConfig('events', ['Model.beforeMarshal' => ['modified_by']]);
-        $this->Table->getEventManager()->on('Model.beforeMarshal', [$behavior, 'dispatch']);
-        $this->Table->newEntity([]);
     }
 }

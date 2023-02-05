@@ -13,12 +13,12 @@ class Plugin extends BasePlugin
     /**
      * @var bool
      */
-    protected $routesEnabled = false;
+    protected bool $routesEnabled = false;
 
     /**
      * @var \Muffin\Footprint\Event\FootprintListener|null
      */
-    protected static $listener;
+    protected static ?FootprintListener $listener;
 
     /**
      * Bootstrap hook
@@ -30,7 +30,7 @@ class Plugin extends BasePlugin
     {
         $app->getEventManager()->on(
             'Model.initialize',
-            function (EventInterface $event) {
+            function (EventInterface $event): void {
                 $event->getSubject()->getEventManager()->on(static::getListener());
             }
         );

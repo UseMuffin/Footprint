@@ -17,7 +17,7 @@ class FootprintMiddleware implements MiddlewareInterface
      *
      * @var array<string, mixed>
      */
-    protected $config = [
+    protected array $config = [
         'identityAttribute' => 'identity',
     ];
 
