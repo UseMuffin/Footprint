@@ -84,10 +84,10 @@ jobs:
         php-version: '8.1'
         extensions: mbstring, intl
         coverage: none
-        tools: vimeo/psalm:4.21, phpstan:1.4
+        tools: vimeo/psalm:5.6, phpstan:1.9
 
     - name: Composer Install
-      run: composer require cakephp/cakephp-codesniffer:^4.2
+      run: composer require cakephp/cakephp-codesniffer:5.x-dev
 
     - name: Run phpcs
       run: vendor/bin/phpcs --standard=CakePHP src/ tests/
