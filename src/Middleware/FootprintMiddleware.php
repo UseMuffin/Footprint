@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Muffin\Footprint\Middleware;
 
 use Cake\Datasource\EntityInterface;
-use Muffin\Footprint\Plugin;
+use Muffin\Footprint\FootprintPlugin;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -44,7 +44,7 @@ class FootprintMiddleware implements MiddlewareInterface
                 $footprint = $footprint->getOriginalData();
             }
 
-            Plugin::getListener()->setUser($footprint);
+            FootprintPlugin::getListener()->setUser($footprint);
         }
 
         return $handler->handle($request);

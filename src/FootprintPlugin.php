@@ -8,7 +8,7 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventInterface;
 use Muffin\Footprint\Event\FootprintListener;
 
-class Plugin extends BasePlugin
+class FootprintPlugin extends BasePlugin
 {
     /**
      * @var bool
