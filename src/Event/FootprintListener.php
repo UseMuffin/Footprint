@@ -8,7 +8,7 @@ use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 
 class FootprintListener implements EventListenerInterface
 {
@@ -87,11 +87,11 @@ class FootprintListener implements EventListenerInterface
      * Universal callback.
      *
      * @param \Cake\Event\EventInterface $event Event.
-     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query $ormObject Query or Entity.
+     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query\SelectQuery $ormObject Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      */
-    public function handleEvent(EventInterface $event, EntityInterface|Query $ormObject, ArrayObject $options): void
+    public function handleEvent(EventInterface $event, EntityInterface|SelectQuery $ormObject, ArrayObject $options): void
     {
         $key = $this->getConfig('optionKey');
         if ($this->_currentUser && empty($options[$key])) {
