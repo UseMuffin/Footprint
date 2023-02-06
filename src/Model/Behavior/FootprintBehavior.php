@@ -9,9 +9,8 @@ use Cake\Database\ExpressionInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Utility\Hash;
-use InvalidArgumentException;
 use UnexpectedValueException;
 
 class FootprintBehavior extends Behavior
@@ -21,7 +20,7 @@ class FootprintBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'events' => [
             'Model.beforeSave' => [
                 'created_by' => 'new',
@@ -93,12 +92,11 @@ class FootprintBehavior extends Behavior
      * Called by the event manager as per list provided by implementedEvents().
      *
      * @param \Cake\Event\EventInterface $event Event.
-     * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $data Query or Entity.
+     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query\SelectQuery $data Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
-     * @throws \InvalidArgumentException If method is called with an unsupported event.
      */
-    public function dispatch(EventInterface $event, $data, ArrayObject $options): void
+    public function dispatch(EventInterface $event, EntityInterface|SelectQuery $data, ArrayObject $options): void
     {
         $eventName = $event->getName();
         if (empty($this->_config['events'][$eventName])) {
@@ -113,33 +111,24 @@ class FootprintBehavior extends Behavior
             return;
         }
 
-        if ($data instanceof Query) {
-            $this->_injectConditions($data, $options, $fields);
-
-            return;
-        }
-
-        throw new InvalidArgumentException(sprintf(
-            'Event "%s" is not supported.',
-            $eventName
-        ));
+        $this->_injectConditions($data, $options, $fields);
     }
 
     /**
      * Injects configured fields into finder conditions.
      *
-     * @param \Cake\ORM\Query $query Query.
+     * @param \Cake\ORM\Query\SelectQuery $query Query.
      * @param \ArrayObject $options Options.
      * @param array $fields Field configuration.
      * @return void
      */
-    protected function _injectConditions(Query $query, ArrayObject $options, array $fields): void
+    protected function _injectConditions(SelectQuery $query, ArrayObject $options, array $fields): void
     {
         foreach (array_keys($fields) as $field) {
             $path = $this->getConfig('propertiesMap.' . $field);
 
             $check = false;
-            $query->traverseExpressions(function (ExpressionInterface $expression) use (&$check, $field, $query) {
+            $query->traverseExpressions(function (ExpressionInterface $expression) use (&$check, $field, $query): void {
                 if ($expression instanceof IdentifierExpression) {
                     !$check && $check = $expression->getIdentifier() === $field;
 

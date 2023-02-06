@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Muffin\Footprint\Event;
 
+use ArrayObject;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
+use Cake\ORM\Query\SelectQuery;
 
 class FootprintListener implements EventListenerInterface
 {
@@ -17,7 +19,7 @@ class FootprintListener implements EventListenerInterface
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'events' => [
             'Model.beforeFind' => -100,
             'Model.beforeRules' => -100,
@@ -32,7 +34,7 @@ class FootprintListener implements EventListenerInterface
      *
      * @var \Cake\Datasource\EntityInterface|null
      */
-    protected $_currentUser;
+    protected ?EntityInterface $_currentUser;
 
     /**
      * Constructor.
@@ -85,12 +87,15 @@ class FootprintListener implements EventListenerInterface
      * Universal callback.
      *
      * @param \Cake\Event\EventInterface $event Event.
-     * @param \Cake\ORM\Query|\Cake\Datasource\EntityInterface $ormObject Query or Entity.
+     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query\SelectQuery $ormObject Query or Entity.
      * @param \ArrayObject $options Options.
      * @return void
      */
-    public function handleEvent(EventInterface $event, $ormObject, $options): void
-    {
+    public function handleEvent(
+        EventInterface $event,
+        EntityInterface|SelectQuery $ormObject,
+        ArrayObject $options
+    ): void {
         $key = $this->getConfig('optionKey');
         if ($this->_currentUser && empty($options[$key])) {
             $options[$key] = $this->_currentUser;
