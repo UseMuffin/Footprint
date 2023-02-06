@@ -9,4 +9,4 @@ parameters:
 		-
 			message: "#^Call to an undefined method object\\:\\:getEventManager\\(\\)\\.$#"
 			count: 1
-			path: src/Plugin.php
+			path: src/FootprintPlugin.php
