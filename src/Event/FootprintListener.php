@@ -91,8 +91,11 @@ class FootprintListener implements EventListenerInterface
      * @param \ArrayObject $options Options.
      * @return void
      */
-    public function handleEvent(EventInterface $event, EntityInterface|SelectQuery $ormObject, ArrayObject $options): void
-    {
+    public function handleEvent(
+        EventInterface $event,
+        EntityInterface|SelectQuery $ormObject,
+        ArrayObject $options
+    ): void {
         $key = $this->getConfig('optionKey');
         if ($this->_currentUser && empty($options[$key])) {
             $options[$key] = $this->_currentUser;
