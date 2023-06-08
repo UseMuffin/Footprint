@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    bootstrap="./tests/bootstrap.php"
-    colors="true"
-    stopOnFailure="false"
-    >
-
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./tests/bootstrap.php" colors="true" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd" cacheDirectory=".phpunit.cache">
     <testsuites>
         <testsuite name="Slug Test Cases">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-
-    <!-- Setup a listener for fixtures -->
     <extensions>
-        <extension class="Cake\TestSuite\Fixture\PHPUnitExtension"/>
+        <bootstrap class="Cake\TestSuite\Fixture\Extension\PHPUnitExtension"/>
     </extensions>
-
     <php>
         <ini name="memory_limit" value="-1"/>
         <env name="FIXTURE_SCHEMA_METADATA" value="./tests/schema.php"/>
     </php>
-
-    <filter>
-       <whitelist>
+    <source>
+        <include>
             <directory suffix=".php">./src/</directory>
-        </whitelist>
-    </filter>
+        </include>
+    </source>
 </phpunit>

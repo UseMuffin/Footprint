@@ -81,7 +81,7 @@ class FootprintBehaviorTest extends TestCase
 
     public function testFind()
     {
-        $result = $this->Table->find('all', ['_footprint' => $this->footprint])
+        $result = $this->Table->find('all', _footprint: $this->footprint)
             ->enableHydration(false)
             ->first();
 
@@ -90,7 +90,7 @@ class FootprintBehaviorTest extends TestCase
 
         // Test to show value of "id" is not used from footprint if
         // "Articles.created_by" is already set in condition.
-        $result = $this->Table->find('all', ['_footprint' => $this->footprint])
+        $result = $this->Table->find('all', _footprint: $this->footprint)
             ->where(['Articles.created_by' => 1])
             ->enableHydration(false)
             ->first();

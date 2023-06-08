@@ -1,5 +1,6 @@
 /composer.lock
 /plugins
 /vendor
+.phpunit.cache
 .phpunit.result.cache
 .idea
