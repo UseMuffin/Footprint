@@ -18,7 +18,7 @@ class FootprintPlugin extends BasePlugin
     /**
      * @var \Muffin\Footprint\Event\FootprintListener|null
      */
-    protected static ?FootprintListener $listener;
+    protected static ?FootprintListener $listener = null;
 
     /**
      * Bootstrap hook
@@ -30,6 +30,7 @@ class FootprintPlugin extends BasePlugin
     {
         $app->getEventManager()->on(
             'Model.initialize',
+            /** @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event */
             function (EventInterface $event): void {
                 $event->getSubject()->getEventManager()->on(static::getListener());
             }
@@ -43,10 +44,6 @@ class FootprintPlugin extends BasePlugin
      */
     public static function getListener(): FootprintListener
     {
-        if (!static::$listener) {
-            static::$listener = new FootprintListener();
-        }
-
-        return static::$listener;
+        return static::$listener ??= new FootprintListener();
     }
 }
