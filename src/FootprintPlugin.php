@@ -8,17 +8,19 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventInterface;
 use Muffin\Footprint\Event\FootprintListener;
 
-class Plugin extends BasePlugin
+class FootprintPlugin extends BasePlugin
 {
+    protected ?string $name = 'Footprint';
+
     /**
      * @var bool
      */
-    protected $routesEnabled = false;
+    protected bool $routesEnabled = false;
 
     /**
      * @var \Muffin\Footprint\Event\FootprintListener|null
      */
-    protected static $listener;
+    protected static ?FootprintListener $listener = null;
 
     /**
      * Bootstrap hook
@@ -30,7 +32,8 @@ class Plugin extends BasePlugin
     {
         $app->getEventManager()->on(
             'Model.initialize',
-            function (EventInterface $event) {
+            /** @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event */
+            function (EventInterface $event): void {
                 $event->getSubject()->getEventManager()->on(static::getListener());
             }
         );
@@ -43,10 +46,6 @@ class Plugin extends BasePlugin
      */
     public static function getListener(): FootprintListener
     {
-        if (!static::$listener) {
-            static::$listener = new FootprintListener();
-        }
-
-        return static::$listener;
+        return static::$listener ??= new FootprintListener();
     }
 }

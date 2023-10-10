@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Muffin\Footprint\Test\TestCase\Event\Listener;
 
+use ArrayObject;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
@@ -10,6 +11,8 @@ use Muffin\Footprint\Event\FootprintListener;
 
 class FootprintListenerTest extends TestCase
 {
+    protected FootprintListener $listener;
+
     public function setUp(): void
     {
         $this->listener = new FootprintListener();
@@ -32,7 +35,7 @@ class FootprintListenerTest extends TestCase
         $entity = new Entity(['id' => 1]);
         $this->listener->setUser($entity);
 
-        $options = new \ArrayObject();
+        $options = new ArrayObject();
         $this->listener->handleEvent(
             new Event('Model.save'),
             new Entity(['title' => 'article']),

@@ -1,7 +1,7 @@
 # Footprint
 
-[![Build Status](https://img.shields.io/travis/UseMuffin/Footprint/master.svg?style=flat-square)](https://github.com/UseMuffin/Footprint/actions?query=workflow%3ACI+branch%3Amaster)
-[![Coverage](https://img.shields.io/github/workflow/status/UseMuffin/Footprint/CI/master?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/UseMuffin/Footprint/ci.yml?style=flat-square)](https://github.com/UseMuffin/Footprint/actions?query=workflow%3ACI+branch%3Amaster)
+[![Coverage](https://img.shields.io/codecov/c/github/UseMuffin/Footprint/master?style=flat-square)](https://codecov.io/github/UseMuffin/Footprint)
 [![Total Downloads](https://img.shields.io/packagist/dt/muffin/footprint.svg?style=flat-square)](https://packagist.org/packages/muffin/footprint)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
@@ -26,19 +26,7 @@ bin/cake plugin load Muffin/Footprint
 ```
 
 The Footprint plugin must be loaded **before** the [Authentication](https://github.com/cakephp/authentication) plugin,
-so you should move the
-
-```php
-$this->addPlugin('Muffin/Footprint');
-```
-
-statement above the
-
-```php
-$this->addPlugin('Authentication');
-```
-
-in your `Application::bootstrap()` manually if required.
+so you should updated your `config/plugins.php` or `Application::bootstrap()` accordingly.
 
 ## Usage
 

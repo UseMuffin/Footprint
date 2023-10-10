@@ -1,5 +1,5 @@
 parameters:
-	level: 7
+	level: 8
 	checkGenericClassInNonGenericObjectType: false
 	checkMissingIterableValueType: false
 	treatPhpDocTypesAsCertain: false
@@ -9,4 +9,4 @@ parameters:
 		-
 			message: "#^Call to an undefined method object\\:\\:getEventManager\\(\\)\\.$#"
 			count: 1
-			path: src/Plugin.php
+			path: src/FootprintPlugin.php
