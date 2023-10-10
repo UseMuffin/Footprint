@@ -10,6 +10,8 @@ use Muffin\Footprint\Event\FootprintListener;
 
 class FootprintPlugin extends BasePlugin
 {
+    protected ?string $name = 'Footprint';
+
     /**
      * @var bool
      */
