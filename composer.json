@@ -30,10 +30,10 @@
         "source": "https://github.com/usemuffin/footprint"
     },
     "require": {
-        "cakephp/cakephp": "5.x-dev"
+        "cakephp/cakephp": "^5.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "5.x-dev",
+        "cakephp/cakephp-codesniffer": "^5.0",
         "phpunit/phpunit": "^10.1"
     },
     "scripts": {
@@ -56,7 +56,5 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
