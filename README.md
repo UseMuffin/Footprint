@@ -75,6 +75,23 @@ fields when creating a record, on the `modified_by` field again when updating
 the record and it will use the associated user record's company `id` in the
 `company_id` field when creating a record.
 
+You can also provide a closure that accepts an EntityInterface and returns a bool:
+
+```php
+$this->addBehavior('Muffin/Footprint.Footprint', [
+    'events' => [
+        'Model.beforeSave' => [
+            'user_id' => 'new',
+            'company_id' => 'new',
+            'modified_by' => 'always',
+            'deleted_by' => function ($entity): bool {
+                return $entity->deleted !== null;
+            },
+        ]
+    ],
+]);
+```
+
 ### Adding middleware via event
 
 In some cases you don't have direct access to the place where the `AuthenticationMiddleware` is added. Then you will have to add this to your `src/Application.php`

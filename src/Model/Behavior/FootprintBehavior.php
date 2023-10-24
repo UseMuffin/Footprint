@@ -163,9 +163,9 @@ class FootprintBehavior extends Behavior
         $new = $entity->isNew() !== false;
 
         foreach ($fields as $field => $when) {
-            if (!in_array($when, ['always', 'new', 'existing'])) {
+            if (!in_array($when, ['always', 'new', 'existing']) && !is_callable($when)) {
                 throw new UnexpectedValueException(sprintf(
-                    'When should be one of "always", "new" or "existing". The passed value "%s" is invalid',
+                    'When should be one of "always", "new" or "existing", or a closure that takes an EntityInterface and returns a bool. The passed value "%s" is invalid',
                     $when
                 ));
             }
@@ -177,7 +177,8 @@ class FootprintBehavior extends Behavior
             if (
                 $when === 'always' ||
                 ($when === 'new' && $new) ||
-                ($when === 'existing' && !$new)
+                ($when === 'existing' && !$new) ||
+                (is_callable($when) && $when($entity))
             ) {
                 $entity->set(
                     $field,
