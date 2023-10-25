@@ -193,8 +193,8 @@ class FootprintBehaviorTest extends TestCase
     {
         $this->expectException('UnexpectedValueException');
         $this->expectExceptionMessage('When should be one of "always", "new" or "existing", ' .
-                                    . 'or a closure that takes an EntityInterface and returns a bool. ' .
-                                    . 'The passed value "invalid" is invalid');
+                                      'or a closure that takes an EntityInterface and returns a bool. ' .
+                                      'The passed value "invalid" is invalid');
 
         $footprint = new Entity([
             'id' => 2,
