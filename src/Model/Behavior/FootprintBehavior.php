@@ -11,6 +11,7 @@ use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query\SelectQuery;
 use Cake\Utility\Hash;
+use Closure;
 use UnexpectedValueException;
 
 class FootprintBehavior extends Behavior
@@ -163,7 +164,7 @@ class FootprintBehavior extends Behavior
         $new = $entity->isNew() !== false;
 
         foreach ($fields as $field => $when) {
-            if (!in_array($when, ['always', 'new', 'existing']) && !is_callable($when)) {
+            if (!in_array($when, ['always', 'new', 'existing']) && !($when instanceof Closure)) {
                 throw new UnexpectedValueException(sprintf(
                     'When should be one of "always", "new" or "existing", or a closure that takes an EntityInterface and returns a bool. The passed value "%s" is invalid',
                     $when
@@ -178,7 +179,7 @@ class FootprintBehavior extends Behavior
                 $when === 'always' ||
                 ($when === 'new' && $new) ||
                 ($when === 'existing' && !$new) ||
-                (is_callable($when) && $when($entity))
+                ($when instanceof Closure && $when($entity))
             ) {
                 $entity->set(
                     $field,

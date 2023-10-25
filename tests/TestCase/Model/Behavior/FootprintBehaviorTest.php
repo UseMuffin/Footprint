@@ -30,12 +30,12 @@ class FootprintBehaviorTest extends TestCase
                     'company_id' => 'always',
                     'manager_id' => function ($entity): bool {
                         return $entity->company_id == 1;
-                    }
+                    },
                 ],
                 'Model.beforeFind' => [
                     'created_by',
                     'company_id',
-                ]
+                ],
             ],
             'propertiesMap' => [
                 'company_id' => '_footprint.company.id',
@@ -192,7 +192,9 @@ class FootprintBehaviorTest extends TestCase
     public function testInjectEntityException()
     {
         $this->expectException('UnexpectedValueException');
-        $this->expectExceptionMessage('When should be one of "always", "new" or "existing", or a closure that takes an EntityInterface and returns a bool. The passed value "invalid" is invalid');
+        $this->expectExceptionMessage('When should be one of "always", "new" or "existing", ' .
+                                    . 'or a closure that takes an EntityInterface and returns a bool. ' .
+                                    . 'The passed value "invalid" is invalid');
 
         $footprint = new Entity([
             'id' => 2,

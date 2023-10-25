@@ -47,6 +47,6 @@ class ArticlesFixture extends TestFixture
             'modified_by' => 4,
             'company_id' => 1,
             'manager_id' => null,
-        ]
+        ],
     ];
 }
