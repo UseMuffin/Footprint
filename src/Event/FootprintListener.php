@@ -86,9 +86,9 @@ class FootprintListener implements EventListenerInterface
     /**
      * Universal callback.
      *
-     * @param \Cake\Event\EventInterface $event Event.
-     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query\SelectQuery $ormObject Query or Entity.
-     * @param \ArrayObject $options Options.
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event Event.
+     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface|array<string, mixed>> $ormObject Query or Entity.
+     * @param \ArrayObject<string, mixed> $options Options.
      * @return void
      */
     public function handleEvent(

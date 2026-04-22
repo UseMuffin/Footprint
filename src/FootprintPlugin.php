@@ -25,7 +25,7 @@ class FootprintPlugin extends BasePlugin
     /**
      * Bootstrap hook
      *
-     * @param \Cake\Core\PluginApplicationInterface $app Application instance.
+     * @param \Cake\Core\PluginApplicationInterface<self> $app Application instance.
      * @return void
      */
     public function bootstrap(PluginApplicationInterface $app): void

@@ -7,6 +7,7 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
     findUnusedCode="false"
     findUnusedBaselineEntry="true"
+    errorBaseline="psalm-baseline.xml"
 >
     <projectFiles>
         <directory name="src" />
@@ -20,5 +21,7 @@
         <MissingClosureParamType errorLevel="suppress"/>
         <MissingClosureReturnType errorLevel="suppress"/>
         <PropertyNotSetInConstructor errorLevel="suppress"/>
+        <ClassMustBeFinal errorLevel="suppress"/>
+        <MissingOverrideAttribute errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

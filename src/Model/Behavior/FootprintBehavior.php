@@ -92,9 +92,9 @@ class FootprintBehavior extends Behavior
      *
      * Called by the event manager as per list provided by implementedEvents().
      *
-     * @param \Cake\Event\EventInterface $event Event.
-     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query\SelectQuery $data Query or Entity.
-     * @param \ArrayObject $options Options.
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event Event.
+     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface|array<string, mixed>> $data Query or Entity.
+     * @param \ArrayObject<string, mixed> $options Options.
      * @return void
      */
     public function dispatch(EventInterface $event, EntityInterface|SelectQuery $data, ArrayObject $options): void
@@ -118,9 +118,9 @@ class FootprintBehavior extends Behavior
     /**
      * Injects configured fields into finder conditions.
      *
-     * @param \Cake\ORM\Query\SelectQuery $query Query.
-     * @param \ArrayObject $options Options.
-     * @param array $fields Field configuration.
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface|array<string, mixed>> $query Query.
+     * @param \ArrayObject<string, mixed> $options Options.
+     * @param array<string, mixed> $fields Field configuration.
      * @return void
      */
     protected function _injectConditions(SelectQuery $query, ArrayObject $options, array $fields): void
@@ -155,8 +155,8 @@ class FootprintBehavior extends Behavior
      * Injects configured field values into entity if those fields are not dirty.
      *
      * @param \Cake\Datasource\EntityInterface $entity Entity.
-     * @param \ArrayObject $options Options.
-     * @param array $fields Field configuration.
+     * @param \ArrayObject<string, mixed> $options Options.
+     * @param array<string, string|\Closure> $fields Field configuration.
      * @return void
      */
     protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields): void
