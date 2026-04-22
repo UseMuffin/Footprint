@@ -75,7 +75,7 @@ class FootprintBehaviorTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $entity->extract(['id', 'title', 'created_by', 'modified_by', 'company_id', 'manager_id'])
+            $entity->extract(['id', 'title', 'created_by', 'modified_by', 'company_id', 'manager_id']),
         );
 
         // Closure fields won't set if disallowed
@@ -206,7 +206,7 @@ class FootprintBehaviorTest extends TestCase
                 'Model.beforeSave' => [
                     'created_by' => 'invalid',
                 ],
-            ]
+            ],
         );
         $entity = new Entity(['title' => 'new article']);
         $entity = $this->Table->save($entity, ['_footprint' => $footprint]);

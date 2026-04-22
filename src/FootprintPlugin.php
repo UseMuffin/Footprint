@@ -25,7 +25,7 @@ class FootprintPlugin extends BasePlugin
     /**
      * Bootstrap hook
      *
-     * @param \Cake\Core\PluginApplicationInterface $app Application instance.
+     * @param \Cake\Core\PluginApplicationInterface<self> $app Application instance.
      * @return void
      */
     public function bootstrap(PluginApplicationInterface $app): void
@@ -35,7 +35,7 @@ class FootprintPlugin extends BasePlugin
             /** @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event */
             function (EventInterface $event): void {
                 $event->getSubject()->getEventManager()->on(static::getListener());
-            }
+            },
         );
     }
 
