@@ -35,7 +35,7 @@ class FootprintPlugin extends BasePlugin
             /** @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event */
             function (EventInterface $event): void {
                 $event->getSubject()->getEventManager()->on(static::getListener());
-            }
+            },
         );
     }
 

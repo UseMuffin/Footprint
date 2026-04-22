@@ -83,7 +83,7 @@ class FootprintBehavior extends Behavior
         /** @phpstan-ignore-next-line */
         return array_fill_keys(
             array_keys($this->_config['events']),
-            'dispatch'
+            'dispatch',
         );
     }
 
@@ -140,7 +140,7 @@ class FootprintBehavior extends Behavior
                     '/^' . $alias . '/',
                     // TODO: Add test to show that cloning is necessary here to avoid issue mentioned in
                     // https://github.com/UseMuffin/Footprint/issues/74
-                    $expression->sql(clone $query->getValueBinder())
+                    $expression->sql(clone $query->getValueBinder()),
                 );
             });
 
@@ -169,7 +169,7 @@ class FootprintBehavior extends Behavior
                     'When should be one of "always", "new" or "existing", ' .
                     'or a closure that takes an EntityInterface and returns a bool. ' .
                     'The passed value "%s" is invalid.',
-                    $when
+                    $when,
                 ));
             }
 
@@ -187,8 +187,8 @@ class FootprintBehavior extends Behavior
                     $field,
                     Hash::get(
                         $options,
-                        $this->getConfig('propertiesMap.' . $field)
-                    )
+                        $this->getConfig('propertiesMap.' . $field),
+                    ),
                 );
             }
         }

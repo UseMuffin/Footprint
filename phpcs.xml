@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<ruleset name="CakePHP Core">
-    <rule ref="CakePHP" />
+<ruleset name="Footprint">
+    <rule ref="CakePHP"/>
 
-    <arg value="s"/>
+    <file>src/</file>
+    <file>tests/</file>
 </ruleset>

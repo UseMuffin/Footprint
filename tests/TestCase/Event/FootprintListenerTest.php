@@ -39,7 +39,7 @@ class FootprintListenerTest extends TestCase
         $this->listener->handleEvent(
             new Event('Model.save'),
             new Entity(['title' => 'article']),
-            $options
+            $options,
         );
 
         $this->assertSame($entity, $options['_footprint']);
