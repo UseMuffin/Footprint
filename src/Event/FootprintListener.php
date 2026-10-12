@@ -19,7 +19,7 @@ class FootprintListener implements EventListenerInterface
      *
      * @var array<string, mixed>
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'events' => [
             'Model.beforeFind' => -100,
             'Model.beforeRules' => -100,
@@ -34,7 +34,7 @@ class FootprintListener implements EventListenerInterface
      *
      * @var \Cake\Datasource\EntityInterface|null
      */
-    protected ?EntityInterface $_currentUser;
+    protected ?EntityInterface $currentUser;
 
     /**
      * Constructor.
@@ -45,7 +45,7 @@ class FootprintListener implements EventListenerInterface
     public function __construct(?EntityInterface $user = null, array $config = [])
     {
         $this->setConfig($config);
-        $this->_currentUser = $user;
+        $this->currentUser = $user;
     }
 
     /**
@@ -70,7 +70,7 @@ class FootprintListener implements EventListenerInterface
      */
     public function setUser(EntityInterface $entity): void
     {
-        $this->_currentUser = $entity;
+        $this->currentUser = $entity;
     }
 
     /**
@@ -80,7 +80,7 @@ class FootprintListener implements EventListenerInterface
      */
     public function getUser(): ?EntityInterface
     {
-        return $this->_currentUser;
+        return $this->currentUser;
     }
 
     /**
@@ -97,8 +97,8 @@ class FootprintListener implements EventListenerInterface
         ArrayObject $options,
     ): void {
         $key = $this->getConfig('optionKey');
-        if ($this->_currentUser && empty($options[$key])) {
-            $options[$key] = $this->_currentUser;
+        if ($this->currentUser && empty($options[$key])) {
+            $options[$key] = $this->currentUser;
         }
     }
 }

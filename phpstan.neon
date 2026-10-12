@@ -3,8 +3,3 @@ parameters:
 	treatPhpDocTypesAsCertain: false
 	paths:
 		- src/
-	ignoreErrors:
-		-
-			message: "#^Call to an undefined method object\\:\\:getEventManager\\(\\)\\.$#"
-			count: 1
-			path: src/FootprintPlugin.php

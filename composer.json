@@ -30,11 +30,12 @@
         "source": "https://github.com/usemuffin/footprint"
     },
     "require": {
-        "cakephp/cakephp": "^5.0"
+        "php": ">=8.5",
+        "cakephp/cakephp": "^6.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^5.0",
-        "phpunit/phpunit": "^11.5.3 || ^12.4 || ^13.0"
+        "cakephp/cakephp-codesniffer": "^6.0",
+        "phpunit/phpunit": "^13.0"
     },
     "scripts": {
         "cs-check": "phpcs --colors --parallel=16 -p src/ tests/",
@@ -52,6 +53,8 @@
             "Cake\\Test\\Fixture\\": "vendor/cakephp/cakephp/tests/Fixture"
         }
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true

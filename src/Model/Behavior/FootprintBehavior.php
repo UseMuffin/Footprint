@@ -21,7 +21,7 @@ class FootprintBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'events' => [
             'Model.beforeSave' => [
                 'created_by' => 'new',
@@ -34,9 +34,9 @@ class FootprintBehavior extends Behavior
     ];
 
     /**
-     * Intialize the behavior.
+     * Initialize the behavior.
      *
-     * @param array<string, mixeD> $config Config options.
+     * @param array<string, mixed> $config Config options.
      * @return void
      */
     public function initialize(array $config): void
@@ -54,7 +54,7 @@ class FootprintBehavior extends Behavior
                     $config['propertiesMap'][] = $field;
                 }
             }
-            $this->_config['events'][$name] = $options;
+            $this->config['events'][$name] = $options;
         }
 
         foreach ($config['propertiesMap'] as $property => $map) {
@@ -82,7 +82,7 @@ class FootprintBehavior extends Behavior
     {
         /** @phpstan-ignore-next-line */
         return array_fill_keys(
-            array_keys($this->_config['events']),
+            array_keys($this->config['events']),
             'dispatch',
         );
     }
@@ -100,19 +100,19 @@ class FootprintBehavior extends Behavior
     public function dispatch(EventInterface $event, EntityInterface|SelectQuery $data, ArrayObject $options): void
     {
         $eventName = $event->getName();
-        if (empty($this->_config['events'][$eventName])) {
+        if (empty($this->config['events'][$eventName])) {
             return;
         }
 
-        $fields = $this->_config['events'][$eventName];
+        $fields = $this->config['events'][$eventName];
 
         if ($data instanceof EntityInterface) {
-            $this->_injectEntity($data, $options, $fields);
+            $this->injectEntity($data, $options, $fields);
 
             return;
         }
 
-        $this->_injectConditions($data, $options, $fields);
+        $this->injectConditions($data, $options, $fields);
     }
 
     /**
@@ -123,7 +123,7 @@ class FootprintBehavior extends Behavior
      * @param array<string, mixed> $fields Field configuration.
      * @return void
      */
-    protected function _injectConditions(SelectQuery $query, ArrayObject $options, array $fields): void
+    protected function injectConditions(SelectQuery $query, ArrayObject $options, array $fields): void
     {
         foreach (array_keys($fields) as $field) {
             $path = $this->getConfig('propertiesMap.' . $field);
@@ -135,7 +135,7 @@ class FootprintBehavior extends Behavior
 
                     return;
                 }
-                $alias = $this->_table->aliasField($field);
+                $alias = $this->table->aliasField($field);
                 !$check && $check = preg_match(
                     '/^' . $alias . '/',
                     // TODO: Add test to show that cloning is necessary here to avoid issue mentioned in
@@ -146,7 +146,7 @@ class FootprintBehavior extends Behavior
 
             $value = Hash::get((array)$options, $path);
             if (!$check && $value) {
-                $query->where([$this->_table->aliasField($field) => $value]);
+                $query->where([$this->table->aliasField($field) => $value]);
             }
         }
     }
@@ -159,7 +159,7 @@ class FootprintBehavior extends Behavior
      * @param array<string, string|\Closure> $fields Field configuration.
      * @return void
      */
-    protected function _injectEntity(EntityInterface $entity, ArrayObject $options, array $fields): void
+    protected function injectEntity(EntityInterface $entity, ArrayObject $options, array $fields): void
     {
         $new = $entity->isNew() !== false;
 
