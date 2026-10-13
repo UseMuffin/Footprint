@@ -36,7 +36,7 @@ Add the `FootprintMiddleware` to the middleware queue in your `Application::midd
 method:
 
 ```php
-$middleware->add('Muffin/Footprint.Footprint');
+$middleware->add(new \Muffin\Footprint\Middleware\FootprintMiddleware());
 ```
 
 It must be added **after** `AuthenticationMiddleware` to ensure that it can read
